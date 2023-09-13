@@ -14,17 +14,13 @@ enum Color { RED, GREEN, WHITE };
 /**
  * @brief Represents possible error codes for @see MyAssertHard()
  */
-enum ErrorCode {
+enum ErrorCode 
+{
   EVERYTHING_FINE = 0, ERROR_NULLPTR, ERROR_BAD_NUMBER, ERROR_BAD_FILE, ERROR_OVERLAP,
-  ERROR_INDEX_OUT_OF_BOUNDS
+  ERROR_INDEX_OUT_OF_BOUNDS, ERROR_NO_MEMORY
 };
 
-/**
- * @brief Represtents ErrorCode names
- */
-static const char* ErrorNames[] = { "OKAY", "ERROR_NULLPTR", "ERROR_BAD_NUMBER",
-                                    "ERROR_BAD_FILE", "ERROR_OVERLAP",
-                                    "ERROR_INDEX_OUT_OF_BOUNDS" };
+typedef int CompareFunction_t(const void* a, const void* b);
 
 /**
  * @brief Hard assert which tells the file, function and line where the error occured.
@@ -37,40 +33,58 @@ static const char* ErrorNames[] = { "OKAY", "ERROR_NULLPTR", "ERROR_BAD_NUMBER",
  */
 #define MyAssertHard(STATEMENT, ERR_CODE, EXIT_CMD)                                                                 \
 if (!(STATEMENT))                                                                                                   \
-({                                                                                                                  \
+do {                                                                                                                \
     SetConsoleColor(stderr, RED);                                                                                   \
-    fprintf(stderr, "%s in %s in %s in line: %d\n", ErrorNames[ERR_CODE], __FILE__, __PRETTY_FUNCTION__, __LINE__); \
+    fprintf(stderr, "%s in %s in %s in line: %d\n", #ERR_CODE, __FILE__, __PRETTY_FUNCTION__, __LINE__);            \
     SetConsoleColor(stderr, WHITE);                                                                                 \
     EXIT_CMD;                                                                                                       \
     exit(ERR_CODE);                                                                                                 \
-})
+} while(0);
 
- /**
-  * @brief Finds max of x, y.
-  */
+/**
+ * @brief Finds max of x, y.
+ */
 #define max(x, y)                                                                                                   \
 ({                                                                                                                  \
     __typeof__(x) _tx = x; __typeof__(y) _ty = y;                                                                   \
     _tx > _ty ? _tx : _ty;                                                                                          \
 })
 
+/**
+ * @brief Finds min of x, y.
+ */
 #define min(x, y)                                                                                                   \
 ({                                                                                                                  \
     __typeof__(x) _tx = x; __typeof__(y) _ty = y;                                                                   \
     _tx < _ty ? _tx : _ty;                                                                                          \
 })
 
-#define ArrayLength(array) sizeof(array) / sizeof(array[0])
+#define SWAP(a, b, size)                                                                                            \
+do                                                                                                                  \
+{                                                                                                                   \
+    char* _a = (char*)a;                                                                                            \
+    char* _b = (char*)b;                                                                                            \
+                                                                                                                    \
+    for (size_t curByte = 0; curByte < size; curByte++)                                                             \
+    {                                                                                                               \
+        char _temp = _a[curByte];                                                                                   \
+        _a[curByte] = _b[curByte];                                                                                  \
+        _b[curByte] = _temp;                                                                                        \
+    }                                                                                                               \
+                                                                                                                    \
+} while (0);                                                                                                        \
 
-  /**
-  * @brief Tells if 2 doubles are equal.
-  *
-  * @param x1
-  * @param x2
-  *
-  * @return true The numbers are equal.
-  * @return false The numbers are not equal.
-  */
+#define ArrayLength(array) (sizeof(array) / sizeof(array[0]))
+
+/**
+ * @brief Tells if 2 doubles are equal.
+ *
+ * @param x1
+ * @param x2
+ *
+ * @return true The numbers are equal.
+ * @return false The numbers are not equal.
+ */
 bool IsEqual(const double x1, const double x2);
 
 /**
@@ -81,6 +95,14 @@ bool IsEqual(const double x1, const double x2);
  * @param length
  */
 void CopyArray(double destination[], double source[], int length);
+
+const void* MinArray(const void* data, size_t elementCount, size_t elementSize, CompareFunction_t* compareFunction);
+const void* MaxArray(const void* data, size_t elementCount, size_t elementSize, CompareFunction_t* compareFunction);
+
+/**
+ * @brief Sorts the given array according to the Compare Function
+*/
+void Sort(void* data, size_t elementCount, size_t elementSize, CompareFunction_t* compareFunction);
 
 /**
  * @brief Clears stdin.
