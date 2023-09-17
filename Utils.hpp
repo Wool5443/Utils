@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define TESTINGs
+
 /**
  * @brief Represents colors for @see SetConsoleColor
  */
@@ -60,29 +62,7 @@ do {                                                                            
 ({                                                                                                                  \
     __typeof__(x) _tx = x; __typeof__(y) _ty = y;                                                                   \
     _tx < _ty ? _tx : _ty;                                                                                          \
-})
-
-/**
- * @brief Swaps the raw bytes of a and b.
- * 
- * @param [in] a - pointer to the 1st object.
- * @param [in] b - pointer to the 2nd object.
- * @param [in] size - size of the objects.
-*/
-#define SWAP(a, b, size)                                                                                            \
-do                                                                                                                  \
-{                                                                                                                   \
-    char* _a = (char*)a;                                                                                            \
-    char* _b = (char*)b;                                                                                            \
-                                                                                                                    \
-    for (size_t curByte = 0; curByte < size; curByte++)                                                             \
-    {                                                                                                               \
-        char _temp = _a[curByte];                                                                                   \
-        _a[curByte] = _b[curByte];                                                                                  \
-        _b[curByte] = _temp;                                                                                        \
-    }                                                                                                               \
-                                                                                                                    \
-} while (0);                                                                                                        \
+})                                                                                         \
 
 /**
  * @brief Tells if 2 doubles are equal.
@@ -127,6 +107,15 @@ const void* MinArray(const void* data, size_t elementCount, size_t elementSize, 
  * @return const void* the the largest element.
 */
 const void* MaxArray(const void* data, size_t elementCount, size_t elementSize, CompareFunction_t* compareFunction);
+
+/**
+ * @brief Swaps the raw bytes of a and b.
+ * 
+ * @param [in] a - pointer to the 1st object.
+ * @param [in] b - pointer to the 2nd object.
+ * @param [in] size - size of the objects.
+*/
+void Swap(void* a, void* b, size_t size);
 
 /**
  * @brief Sorts the given array according to the Compare Function.
