@@ -28,7 +28,7 @@ enum ErrorCode
 typedef int CompareFunction_t(const void* a, const void* b);
 
 /**
- * @brief Hard assert which tells the file, function and line where the error occured.
+ * @brief Hard assert which tells the file, function and line where the error occurred.
  *
  * @param [in] STATEMENT - the condition to check.
  * @param [in] ERR_CODE - what can happen @see ErrorCode.
@@ -44,6 +44,16 @@ do {                                                                            
     SetConsoleColor(stderr, WHITE);                                                                                 \
     EXIT_CMD;                                                                                                       \
     exit(ERR_CODE);                                                                                                 \
+} while(0);
+
+#define MyAssertSoft(STATEMENT, ERR_CODE, EXIT_CMD)                                                                 \
+if (!(STATEMENT))                                                                                                   \
+do {                                                                                                                \
+    SetConsoleColor(stderr, RED);                                                                                   \
+    fprintf(stderr, "%s in %s in %s in line: %d\n", #ERR_CODE, __FILE__, __PRETTY_FUNCTION__, __LINE__);            \
+    SetConsoleColor(stderr, WHITE);                                                                                 \
+    EXIT_CMD;                                                                                                       \
+    return ERR_CODE;                                                                                                \
 } while(0);
 
 /**
@@ -90,9 +100,9 @@ void CopyArray(double destination[], double source[], int length);
  * @param [in] data - the array to find min in.
  * @param [in] elementCount - length of the array.
  * @param [in] elementSize - size in bytes of the elements.
- * @param [in] compareFuntion - @see CompareFunction_t - the comparator.
+ * @param [in] compareFunction - @see CompareFunction_t - the comparator.
  * 
- * @return const void* the the smalles element.
+ * @return const void* the the smallest element.
 */
 const void* MinArray(const void* data, size_t elementCount, size_t elementSize, CompareFunction_t* compareFunction);
 
@@ -102,7 +112,7 @@ const void* MinArray(const void* data, size_t elementCount, size_t elementSize, 
  * @param [in] data - the array to find max in.
  * @param [in] elementCount - length of the array.
  * @param [in] elementSize - size in bytes of the elements.
- * @param [in] compareFuntion - @see CompareFunction_t - the comparator.
+ * @param [in] compareFunction - @see CompareFunction_t - the comparator.
  * 
  * @return const void* the the largest element.
 */
