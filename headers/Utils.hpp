@@ -19,7 +19,8 @@ enum Color { RED, GREEN, WHITE };
 enum ErrorCode 
 {
   EVERYTHING_FINE = 0, ERROR_NULLPTR, ERROR_BAD_NUMBER, ERROR_BAD_FILE, ERROR_OVERLAP,
-  ERROR_INDEX_OUT_OF_BOUNDS, ERROR_NO_MEMORY, ERROR_NO_COMPARATOR
+  ERROR_INDEX_OUT_OF_BOUNDS, ERROR_NO_MEMORY, ERROR_NO_COMPARATOR, ERROR_BAD_SIZE,
+  ERROR_BAD_VALUE, ERROR_DEAD_CANARY
 };
 
 /**
@@ -36,23 +37,34 @@ typedef int CompareFunction_t(const void* a, const void* b);
  *
  * @note If there is nothing to perform pass nothing.
  */
-#define MyAssertHard(STATEMENT, ERR_CODE, EXIT_CMD)                                                                 \
+#define MyAssertHard(STATEMENT, ERR_CODE, ...)                                                                      \
 if (!(STATEMENT))                                                                                                   \
 do {                                                                                                                \
     SetConsoleColor(stderr, RED);                                                                                   \
     fprintf(stderr, "%s in %s in %s in line: %d\n", #ERR_CODE, __FILE__, __PRETTY_FUNCTION__, __LINE__);            \
     SetConsoleColor(stderr, WHITE);                                                                                 \
-    EXIT_CMD;                                                                                                       \
+    __VA_ARGS__;                                                                                                    \
     exit(ERR_CODE);                                                                                                 \
 } while(0);
 
-#define MyAssertSoft(STATEMENT, ERR_CODE, EXIT_CMD)                                                                 \
+#define ValueToString(VALUE) #VALUE
+
+/**
+ * @brief Soft assert which tells the file, function and line where the error occurred.
+ *
+ * @param [in] STATEMENT - the condition to check.
+ * @param [in] ERR_CODE - what can happen @see ErrorCode.
+ * @param [in] EXIT_CMD - operation to perform before exiting the program.
+ *
+ * @note If there is nothing to perform pass nothing.
+ */
+#define MyAssertSoft(STATEMENT, ERR_CODE, ...)                                                                      \
 if (!(STATEMENT))                                                                                                   \
 do {                                                                                                                \
     SetConsoleColor(stderr, RED);                                                                                   \
     fprintf(stderr, "%s in %s in %s in line: %d\n", #ERR_CODE, __FILE__, __PRETTY_FUNCTION__, __LINE__);            \
     SetConsoleColor(stderr, WHITE);                                                                                 \
-    EXIT_CMD;                                                                                                       \
+    __VA_ARGS__;                                                                                                    \
     return ERR_CODE;                                                                                                \
 } while(0);
 
@@ -72,7 +84,14 @@ do {                                                                            
 ({                                                                                                                  \
     __typeof__(x) _tx = x; __typeof__(y) _ty = y;                                                                   \
     _tx < _ty ? _tx : _ty;                                                                                          \
-})                                                                                         \
+})                                                                                                                  \
+
+struct Owner
+{
+    const char* fileName;
+    size_t line;
+    const char* name;
+};
 
 /**
  * @brief Tells if 2 doubles are equal.
