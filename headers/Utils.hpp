@@ -9,7 +9,7 @@
 
 #define TESTINGs
 
-/**
+/** @enum Color
  * @brief Represents colors for @see SetConsoleColor
  */
 enum Color { RED, GREEN, WHITE };
@@ -22,6 +22,13 @@ enum ErrorCode
   EVERYTHING_FINE = 0, ERROR_NULLPTR, ERROR_BAD_NUMBER, ERROR_BAD_FILE, ERROR_OVERLAP,
   ERROR_INDEX_OUT_OF_BOUNDS, ERROR_NO_MEMORY, ERROR_NO_COMPARATOR, ERROR_BAD_SIZE,
   ERROR_BAD_VALUE, ERROR_DEAD_CANARY, ERROR_BAD_HASH
+};
+
+static const char* ERROR_CODE_NAMES[] =
+{
+  "EVERYTHING_FINE", "ERROR_NULLPTR", "ERROR_BAD_NUMBER", "ERROR_BAD_FILE", "ERROR_OVERLAP",
+  "ERROR_INDEX_OUT_OF_BOUNDS", "ERROR_NO_MEMORY", "ERROR_NO_COMPARATOR", "ERROR_BAD_SIZE",
+  "ERROR_BAD_VALUE", "ERROR_DEAD_CANARY", "ERROR_BAD_HASH"
 };
 
 /**
@@ -48,6 +55,11 @@ do {                                                                            
     exit(ERR_CODE);                                                                                                 \
 } while(0);
 
+/**
+ * @brief Transforms a given name into a string.
+ * 
+ * @param [in] VALUE - the thing to transform.
+*/
 #define ValueToString(VALUE) #VALUE
 
 /**
@@ -87,6 +99,13 @@ do {                                                                            
     _tx < _ty ? _tx : _ty;                                                                                          \
 })                                                                                                                  \
 
+/**
+ * @brief Struct to contain where some variable was created.
+ * 
+ * @var Owner::fileName - the file where the variable was created.
+ * @var Owner::line - the line where it was created.
+ * @var Owner::name - the name of the variable.
+*/
 struct Owner
 {
     const char* fileName;
@@ -179,6 +198,6 @@ bool CheckInput(void);
  */
 void SetConsoleColor(FILE* place, const enum Color color);
 
-unsigned int MurmurHash2A(const void *key, size_t len, uint64_t seed);
+unsigned int CalculateHash(const void *key, size_t len, unsigned int seed);
 
 #endif
