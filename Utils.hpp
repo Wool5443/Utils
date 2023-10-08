@@ -63,9 +63,9 @@ do                                                                              
 #define MyAssertHard(STATEMENT, ERR_CODE, ...)                                                                      \
 if (!(STATEMENT))                                                                                                   \
 do {                                                                                                                \
-    SetConsoleColor(stderr, RED);                                                                                   \
+    SetConsoleColor(stderr, COLOR_RED);                                                                                   \
     fprintf(stderr, "%s in %s in %s in line: %d\n", #ERR_CODE, __FILE__, __PRETTY_FUNCTION__, __LINE__);            \
-    SetConsoleColor(stderr, WHITE);                                                                                 \
+    SetConsoleColor(stderr, COLOR_WHITE);                                                                                 \
     __VA_ARGS__;                                                                                                    \
     exit(ERR_CODE);                                                                                                 \
 } while(0);
@@ -89,9 +89,9 @@ do {                                                                            
 #define MyAssertSoft(STATEMENT, ERR_CODE, ...)                                                                      \
 if (!(STATEMENT))                                                                                                   \
 do {                                                                                                                \
-    SetConsoleColor(stderr, RED);                                                                                   \
+    SetConsoleColor(stderr, COLOR_RED);                                                                                   \
     fprintf(stderr, "%s in %s in %s in line: %d\n", #ERR_CODE, __FILE__, __PRETTY_FUNCTION__, __LINE__);            \
-    SetConsoleColor(stderr, WHITE);                                                                                 \
+    SetConsoleColor(stderr, COLOR_WHITE);                                                                                 \
     __VA_ARGS__;                                                                                                    \
     return ERR_CODE;                                                                                                \
 } while(0);
