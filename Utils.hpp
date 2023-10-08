@@ -94,25 +94,7 @@ do {                                                                            
     SetConsoleColor(stderr, COLOR_WHITE);                                                                                 \
     __VA_ARGS__;                                                                                                    \
     return ERR_CODE;                                                                                                \
-} while(0);
-
-/**
- * @brief Finds max of x, y.
- */
-#define max(x, y)                                                                                                   \
-({                                                                                                                  \
-    __typeof__(x) _tx = x; __typeof__(y) _ty = y;                                                                   \
-    _tx > _ty ? _tx : _ty;                                                                                          \
-})
-
-/**
- * @brief Finds min of x, y.
- */
-#define min(x, y)                                                                                                   \
-({                                                                                                                  \
-    __typeof__(x) _tx = x; __typeof__(y) _ty = y;                                                                   \
-    _tx < _ty ? _tx : _ty;                                                                                          \
-})                                                                                                                  \
+} while(0);                                                                                                           \
 
 /**
  * @brief Struct to contain where some variable was created.
