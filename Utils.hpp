@@ -1,7 +1,7 @@
 //! @file
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,7 +12,17 @@
 /** @enum Color
  * @brief Represents colors for @see SetConsoleColor
  */
-enum Color { RED, GREEN, WHITE };
+enum Color
+{
+    COLOR_BLACK = 30,
+    COLOR_RED,
+    COLOR_GREEN,
+    COLOR_YELLOW,
+    COLOR_BLUE,
+    COLOR_MAGENTA,
+    COLOR_CYAN,
+    COLOR_WHITE,
+};
 
 /** @enum ErrorCode
  * @brief Represents possible error codes for @see MyAssertHard()
@@ -21,20 +31,25 @@ enum ErrorCode
 {
   EVERYTHING_FINE = 0, ERROR_NULLPTR, ERROR_BAD_NUMBER, ERROR_BAD_FILE, ERROR_OVERLAP,
   ERROR_INDEX_OUT_OF_BOUNDS, ERROR_NO_MEMORY, ERROR_NO_COMPARATOR, ERROR_BAD_SIZE,
-  ERROR_BAD_VALUE, ERROR_DEAD_CANARY, ERROR_BAD_HASH
+  ERROR_BAD_VALUE, ERROR_DEAD_CANARY, ERROR_BAD_HASH, ERROR_ZERO_DIVISION,
+  ERROR_SYNTAX
 };
 
 static const char* ERROR_CODE_NAMES[] =
 {
   "EVERYTHING_FINE", "ERROR_NULLPTR", "ERROR_BAD_NUMBER", "ERROR_BAD_FILE", "ERROR_OVERLAP",
   "ERROR_INDEX_OUT_OF_BOUNDS", "ERROR_NO_MEMORY", "ERROR_NO_COMPARATOR", "ERROR_BAD_SIZE",
-  "ERROR_BAD_VALUE", "ERROR_DEAD_CANARY", "ERROR_BAD_HASH"
+  "ERROR_BAD_VALUE", "ERROR_DEAD_CANARY", "ERROR_BAD_HASH", "ERROR_ZERO_DIVISION",
+  "ERROR_SYNTAX"
 };
 
-/**
- * @brief typedef for compare functions used in universal quicksort.
-*/
-typedef int CompareFunction_t(const void* a, const void* b);
+#define RETURN_ERROR(error)                                                                     \
+do                                                                                              \
+{                                                                                               \
+   __typeof__(error) _error = error;                                                            \
+   if (_error)                                                                                  \
+      return _error;                                                                            \
+} while (0);
 
 /**
  * @brief Hard assert which tells the file, function and line where the error occurred.
@@ -106,7 +121,7 @@ do {                                                                            
  * @var Owner::line - the line where it was created.
  * @var Owner::name - the name of the variable.
 */
-struct Owner
+struct SourceCodePosition
 {
     const char* fileName;
     size_t line;
@@ -125,78 +140,29 @@ struct Owner
 bool IsEqual(const double x1, const double x2);
 
 /**
- * @brief Copies <length> element from source to destination starting at zero index.
- *
- * @param destination
- * @param source
- * @param length
- */
-void CopyArray(double destination[], double source[], int length);
-
-/**
- * @brief Finds min of the given array of any type.
- * 
- * @param [in] data - the array to find min in.
- * @param [in] elementCount - length of the array.
- * @param [in] elementSize - size in bytes of the elements.
- * @param [in] compareFunction - @see CompareFunction_t - the comparator.
- * 
- * @return const void* the the smallest element.
-*/
-const void* MinArray(const void* data, size_t elementCount, size_t elementSize, CompareFunction_t* compareFunction);
-
-/**
- * @brief Finds max of the given array of any type.
- * 
- * @param [in] data - the array to find max in.
- * @param [in] elementCount - length of the array.
- * @param [in] elementSize - size in bytes of the elements.
- * @param [in] compareFunction - @see CompareFunction_t - the comparator.
- * 
- * @return const void* the the largest element.
-*/
-const void* MaxArray(const void* data, size_t elementCount, size_t elementSize, CompareFunction_t* compareFunction);
-
-/**
- * @brief Swaps the raw bytes of a and b.
- * 
- * @param [in] a - pointer to the 1st object.
- * @param [in] b - pointer to the 2nd object.
- * @param [in] size - size of the objects.
-*/
-void Swap(void* a, void* b, size_t size);
-
-/**
- * @brief Sorts the given array according to the Compare Function.
- * Uses randomized quick sort.
- * 
- * @param [in] data - the array to sort.
- * @param [in] elementCount - length of the array.
- * @param [in] elementSize - size in bytes of the array elements.
- * @param [in] compareFunction - @see CompareFunction_t
-*/
-void Sort(void* data, size_t elementCount, size_t elementSize, CompareFunction_t* compareFunction);
-
-/**
  * @brief Clears stdin.
+ * 
+ * @param [in] where - file stream which buffer to clean.
  */
-void ClearBuffer(void);
+void ClearBuffer(FILE* where);
 
 /**
  * @brief Check if the user input contains anything but scanned data.
  *
+ * @param [in] where - file stream where to input.
+ * 
  * @return true Everything is clear.
  * @return false User entered something odd.
  */
-bool CheckInput(void);
+bool CheckInput(FILE* where);
 
 /**
  * @brief Set the color of either stderr or stdout
  *
- * @param place - stderr or stdout
+ * @param where - stderr or stdout
  * @param color - @see Color
  */
-void SetConsoleColor(FILE* place, const enum Color color);
+void SetConsoleColor(FILE* where, enum Color color);
 
 unsigned int CalculateHash(const void *key, size_t len, unsigned int seed);
 
