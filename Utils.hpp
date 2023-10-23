@@ -43,12 +43,20 @@ static const char* ERROR_CODE_NAMES[] =
     "ERROR_SYNTAX", "ERROR_WRONG_LABEL_SIZE", "ERROR_TOO_MANY_LABELS",
 };
 
-#define RETURN_ERROR(error)                                                                                         \
+#define RETURN_ERROR(ERR_CODE)                                                                                      \
 do                                                                                                                  \
 {                                                                                                                   \
     __typeof__(error) _error = error;                                                                               \
     if (_error)                                                                                                     \
         return _error;                                                                                              \
+} while (0)
+
+#define RETURN_ERROR_RESULT(VALUE, ERR_CODE)                                                                        \
+do                                                                                                                  \
+{                                                                                                                   \
+    __typeof__(error) _error = error;                                                                               \
+    if (_error)                                                                                                     \
+        return {value, _error};                                                                                     \
 } while (0)
 
 /**
