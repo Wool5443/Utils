@@ -51,12 +51,12 @@ do                                                                              
         return _error;                                                                                              \
 } while (0)
 
-#define RETURN_ERROR_RESULT(VALUE, ERR_CODE)                                                                        \
+#define RETURN_ERROR_RESULT(RESULT, POISON)                                                                         \
 do                                                                                                                  \
 {                                                                                                                   \
-    __typeof__(error) _error = error;                                                                               \
-    if (_error)                                                                                                     \
-        return {value, _error};                                                                                     \
+    __typeof__(RESULT) _result = RESULT;                                                                            \
+    if (_result.error)                                                                                              \
+        return {POISON, _result.error};                                                                             \
 } while (0)
 
 /**
