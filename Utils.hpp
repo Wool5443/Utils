@@ -34,7 +34,7 @@ enum ErrorCode
     ERROR_BAD_VALUE, ERROR_DEAD_CANARY, ERROR_BAD_HASH, ERROR_ZERO_DIVISION,
     ERROR_SYNTAX, ERROR_WRONG_LABEL_SIZE, ERROR_TOO_MANY_LABELS,
     ERROR_NOT_FOUND, ERROR_BAD_FIELDS, ERROR_BAD_TREE, ERROR_NO_ROOT,
-    ERROR_TREE_LOOP, ERROR_BAD_BUTTON, ERROR_BAD_WINDOW, EXIT
+    ERROR_TREE_LOOP, EXIT,
 };
 
 static const char* ERROR_CODE_NAMES[] =
@@ -44,11 +44,21 @@ static const char* ERROR_CODE_NAMES[] =
     "ERROR_BAD_VALUE", "ERROR_DEAD_CANARY", "ERROR_BAD_HASH", "ERROR_ZERO_DIVISION",
     "ERROR_SYNTAX", "ERROR_WRONG_LABEL_SIZE", "ERROR_TOO_MANY_LABELS",
     "ERROR_NOT_FOUND", "ERROR_BAD_FIELDS", "ERROR_BAD_TREE", "ERROR_NO_ROOT",
-    "ERROR_TREE_LOOP", "ERROR_BAD_BUTTON", "ERROR_BAD_WINDOW", "EXIT"
+    "ERROR_TREE_LOOP", "EXIT",
 };
 
 static const size_t SIZET_POISON = (size_t)-1;
 
+/**
+ * @brief Returns if error and executed given code
+ *
+ * @param [in] error - some error
+ * @param [in] exitCode - code to perform before exiting the program
+ *
+ * @note If there is nothing to perform pass nothing
+ *
+ * @return error
+ */
 #define RETURN_ERROR(error, ...)                                                                                            \
 do                                                                                                                          \
 {                                                                                                                           \
@@ -60,6 +70,16 @@ do                                                                              
     }                                                                                                                       \
 } while (0)
 
+/**
+ * @brief Returns if result contains an error and returns it
+ *
+ * @param [in] rsutlt
+ * @param [in] exitCode - code to perform before exiting the program
+ *
+ * @note If there is nothing to perform pass nothing
+ *
+ * @return result
+ */
 #define RETURN_ERROR_RESULT(result, poison, ...)                                                                            \
 do                                                                                                                          \
 {                                                                                                                           \
@@ -110,7 +130,8 @@ do {                                                                            
  */
 #define MyAssertSoft(statement, error, ...)                                                                                 \
 if (!(statement))                                                                                                           \
-do {                                                                                                                        \
+do                                                                                                                          \
+{                                                                                                                           \
     SetConsoleColor(stderr, COLOR_RED);                                                                                     \
     fprintf(stderr, "%s in %s in %s in line: %d\n", ERROR_CODE_NAMES[error], __FILE__, __PRETTY_FUNCTION__, __LINE__);      \
     SetConsoleColor(stderr, COLOR_WHITE);                                                                                   \
@@ -132,12 +153,13 @@ do {                                                                            
  */
 #define MyAssertSoftResult(statement, value, error, ...)                                                                    \
 if (!(statement))                                                                                                           \
-do {                                                                                                                        \
+do                                                                                                                          \
+{                                                                                                                           \
     SetConsoleColor(stderr, COLOR_RED);                                                                                     \
     fprintf(stderr, "%s in %s in %s in line: %d\n", ERROR_CODE_NAMES[error], __FILE__, __PRETTY_FUNCTION__, __LINE__);      \
     SetConsoleColor(stderr, COLOR_WHITE);                                                                                   \
     __VA_ARGS__;                                                                                                            \
-    return { value, error };                                                                                                  \
+    return { value, error };                                                                                                \
 } while(0)
 
 /**
@@ -201,19 +223,27 @@ char* ReadFileToBuf(const char* filePath);
 /**
  * @brief Set the color of either stderr or stdout
  *
- * @param where - stderr or stdout
- * @param color - @see Color
+ * @param [in] where - stderr or stdout
+ * @param [in] color - @see Color
  */
 void SetConsoleColor(FILE* where, enum Color color);
 
 /**
  * @brief Get the file size.
  * 
- * @param path to the file.
+ * @param [in] path to the file.
  * @return size.
  */
 size_t GetFileSize(const char* path);
 
+/**
+ * @brief Calculates hash
+ *
+ * @param [in] key - the object to hash
+ * @param [in] len - length in bytes
+ * @param [in] - salt
+ * @return unsigned int hash
+ */
 unsigned int CalculateHash(const void *key, size_t len, unsigned int seed);
 
 #endif
