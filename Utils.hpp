@@ -34,7 +34,7 @@ enum ErrorCode
     ERROR_BAD_VALUE, ERROR_DEAD_CANARY, ERROR_BAD_HASH, ERROR_ZERO_DIVISION,
     ERROR_SYNTAX, ERROR_WRONG_LABEL_SIZE, ERROR_TOO_MANY_LABELS,
     ERROR_NOT_FOUND, ERROR_BAD_FIELDS, ERROR_BAD_TREE, ERROR_NO_ROOT,
-    ERROR_TREE_LOOP,
+    ERROR_TREE_LOOP, ERROR_BAD_BUTTON, ERROR_BAD_WINDOW, EXIT
 };
 
 static const char* ERROR_CODE_NAMES[] =
@@ -44,24 +44,31 @@ static const char* ERROR_CODE_NAMES[] =
     "ERROR_BAD_VALUE", "ERROR_DEAD_CANARY", "ERROR_BAD_HASH", "ERROR_ZERO_DIVISION",
     "ERROR_SYNTAX", "ERROR_WRONG_LABEL_SIZE", "ERROR_TOO_MANY_LABELS",
     "ERROR_NOT_FOUND", "ERROR_BAD_FIELDS", "ERROR_BAD_TREE", "ERROR_NO_ROOT",
-    "ERROR_TREE_LOOP",
+    "ERROR_TREE_LOOP", "ERROR_BAD_BUTTON", "ERROR_BAD_WINDOW", "EXIT"
 };
 
 static const size_t SIZET_POISON = (size_t)-1;
 
-#define RETURN_ERROR(error)                                                                                                 \
+#define RETURN_ERROR(error, ...)                                                                                            \
 do                                                                                                                          \
 {                                                                                                                           \
     __typeof__(error) _error = error;                                                                                       \
     if (_error)                                                                                                             \
+    {                                                                                                                       \
+        __VA_ARGS__;                                                                                                        \
         return _error;                                                                                                      \
+    }                                                                                                                       \
 } while (0)
 
-#define RETURN_ERROR_RESULT(result, poison)                                                                                 \
+#define RETURN_ERROR_RESULT(result, poison, ...)                                                                            \
 do                                                                                                                          \
 {                                                                                                                           \
-    if (result.error)                                                                                                       \
-        return {poison, result.error};                                                                                      \
+    __typeof(result) _result = result;                                                                                      \
+    if (_result.error)                                                                                                      \
+    {                                                                                                                       \
+        __VA_ARGS__;                                                                                                        \
+        return { poison, _result.error };                                                                                   \
+    }                                                                                                                       \
 } while (0)
 
 /**
@@ -81,7 +88,7 @@ do {                                                                            
     SetConsoleColor(stderr, COLOR_WHITE);                                                                                   \
     __VA_ARGS__;                                                                                                            \
     exit(error);                                                                                                            \
-} while(0);
+} while(0)
 
 /**
  * @brief Transforms a given name into a string.
@@ -109,7 +116,7 @@ do {                                                                            
     SetConsoleColor(stderr, COLOR_WHITE);                                                                                   \
     __VA_ARGS__;                                                                                                            \
     return error;                                                                                                           \
-} while(0);                                                                                                                 \
+} while(0)
 
 /**
  * @brief Soft assert which tells the file, function and line where the error occurred.
@@ -130,8 +137,8 @@ do {                                                                            
     fprintf(stderr, "%s in %s in %s in line: %d\n", ERROR_CODE_NAMES[error], __FILE__, __PRETTY_FUNCTION__, __LINE__);      \
     SetConsoleColor(stderr, COLOR_WHITE);                                                                                   \
     __VA_ARGS__;                                                                                                            \
-    return {value, error};                                                                                                  \
-} while(0);                                                                                                                 \
+    return { value, error };                                                                                                  \
+} while(0)
 
 /**
  * @brief Struct to contain where some variable was created.
@@ -182,6 +189,14 @@ void ClearBuffer(FILE* where);
  * @return false User entered something odd.
  */
 bool CheckInput(FILE* where);
+
+/**
+ * @brief Reads a file to a buffer and returns it.
+ * 
+ * @param [in] filePath path to the file.
+ * @return char* buffer.
+ */
+char* ReadFileToBuf(const char* filePath);
 
 /**
  * @brief Set the color of either stderr or stdout

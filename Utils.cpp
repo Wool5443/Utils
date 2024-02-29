@@ -29,7 +29,8 @@ void Swap(void* a, void* b, size_t size)
 
 void ClearBuffer(FILE* where)
 {
-	while (fgetc(where) != '\n') { ; }
+	int c = fgetc(where);
+	while (c != '\n' && c != EOF) { c = fgetc(where); }
 }
 
 bool CheckInput(FILE* where)
@@ -38,6 +39,27 @@ bool CheckInput(FILE* where)
 	while (c == ' ' || c == '\t') { c = fgetc(where); }
 
 	return c == '\n';
+}
+
+char* ReadFileToBuf(const char* filePath)
+{
+	if (!filePath)
+		return nullptr;
+
+	size_t fileSize = GetFileSize(filePath);
+
+	char* buf = (char*)calloc(fileSize + 2, 1);
+	if (!buf)
+		return nullptr;
+
+	FILE* file = fopen(filePath, "r");
+	if (!file)
+		return nullptr;
+
+	if (fread(buf, 1, fileSize, file) != fileSize)
+		return nullptr;
+
+	return buf;
 }
 
 void SetConsoleColor(FILE* where, enum Color color)
