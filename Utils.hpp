@@ -100,6 +100,7 @@ do                                                                              
  *
  * @note If there is nothing to perform pass nothing.
  */
+#ifdef DEBUG
 #define MyAssertHard(statement, error, ...)                                                                                 \
 if (!(statement))                                                                                                           \
 do {                                                                                                                        \
@@ -109,6 +110,9 @@ do {                                                                            
     __VA_ARGS__;                                                                                                            \
     exit(error);                                                                                                            \
 } while(0)
+#else
+#define MyAssertHard(...)
+#endif
 
 /**
  * @brief Transforms a given name into a string.
@@ -128,6 +132,7 @@ do {                                                                            
  * 
  * @return ErrorCode
  */
+#ifdef DEBUG
 #define MyAssertSoft(statement, error, ...)                                                                                 \
 if (!(statement))                                                                                                           \
 do                                                                                                                          \
@@ -138,6 +143,9 @@ do                                                                              
     __VA_ARGS__;                                                                                                            \
     return error;                                                                                                           \
 } while(0)
+#else
+#define MyAssertSoft(...)
+#endif
 
 /**
  * @brief Soft assert which tells the file, function and line where the error occurred.
@@ -151,6 +159,7 @@ do                                                                              
  * 
  * @return Result Struct.
  */
+#ifdef DEBUG
 #define MyAssertSoftResult(statement, value, error, ...)                                                                    \
 if (!(statement))                                                                                                           \
 do                                                                                                                          \
@@ -161,6 +170,9 @@ do                                                                              
     __VA_ARGS__;                                                                                                            \
     return { value, error };                                                                                                \
 } while(0)
+#else
+#define MyAssertSoftResult(...)
+#endif
 
 /**
  * @brief Struct to contain where some variable was created.
