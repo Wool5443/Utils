@@ -34,7 +34,7 @@ enum ErrorCode
     ERROR_BAD_VALUE, ERROR_DEAD_CANARY, ERROR_BAD_HASH, ERROR_ZERO_DIVISION,
     ERROR_SYNTAX, ERROR_WRONG_LABEL_SIZE, ERROR_TOO_MANY_LABELS,
     ERROR_NOT_FOUND, ERROR_BAD_FIELDS, ERROR_BAD_TREE, ERROR_NO_ROOT,
-    ERROR_TREE_LOOP, EXIT,
+    ERROR_TREE_LOOP, ERROR_SDL, EXIT,
 };
 
 static const char* ERROR_CODE_NAMES[] =
@@ -44,7 +44,7 @@ static const char* ERROR_CODE_NAMES[] =
     "ERROR_BAD_VALUE", "ERROR_DEAD_CANARY", "ERROR_BAD_HASH", "ERROR_ZERO_DIVISION",
     "ERROR_SYNTAX", "ERROR_WRONG_LABEL_SIZE", "ERROR_TOO_MANY_LABELS",
     "ERROR_NOT_FOUND", "ERROR_BAD_FIELDS", "ERROR_BAD_TREE", "ERROR_NO_ROOT",
-    "ERROR_TREE_LOOP", "EXIT",
+    "ERROR_TREE_LOOP", "ERROR_SDL", "EXIT",
 };
 
 static const size_t SIZET_POISON = (size_t)-1;
@@ -173,6 +173,12 @@ do                                                                              
 #else
 #define MyAssertSoftResult(...)
 #endif
+
+#define ASM(...)        \
+asm(".intel_syntax;"    \
+    #__VA_ARGS__        \
+    ";.att_syntax;"     \
+)
 
 /**
  * @brief Struct to contain where some variable was created.
