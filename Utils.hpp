@@ -175,9 +175,9 @@ do                                                                              
 #endif
 
 #define ASM(...)        \
-asm(".intel_syntax;"    \
-    #__VA_ARGS__        \
-    ";.att_syntax;"     \
+asm(".intel_syntax\n"   \
+    __VA_ARGS__  "\n"   \
+    ".att_syntax\n"     \
 )
 
 /**
