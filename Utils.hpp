@@ -50,18 +50,6 @@ static const char* ERROR_CODE_NAMES[] =
 static const size_t SIZET_POISON = (size_t)-1;
 
 /**
- * @brief Does WAYLAND_STUFF if WAYLAND is defined else the rest
- * 
- * @param [in] WAYLAND_STUFF - stuff to do if WAYLAND is defined
- * @param [in] ... - stuff to do if WAYLAND is not defined
-*/
-#ifdef WAYLAND
-#define ON_WAYLAND(WAYLAND_STUFF, ...) WAYLAND_STUFF
-#else
-#define ON_WAYLAND(WAYLAND_STUFF, ...) __VA_ARGS__
-#endif
-
-/**
  * @brief Returns if error and executed given code
  *
  * @param [in] error - some error
