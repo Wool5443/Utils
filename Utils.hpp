@@ -7,8 +7,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define TESTINGs
-
 /** @enum Color
  * @brief Represents colors for @see SetConsoleColor
  */
@@ -53,7 +51,7 @@ static const size_t SIZET_POISON = (size_t)-1;
  * @brief Returns if error and executed given code
  *
  * @param [in] error - some error
- * @param [in] exitCode - code to perform before exiting the program
+ * @param [in] ... - code to perform before exiting the program
  *
  * @note If there is nothing to perform pass nothing
  *
@@ -74,7 +72,7 @@ do                                                                              
  * @brief Returns if result contains an error and returns it
  *
  * @param [in] rsutlt
- * @param [in] exitCode - code to perform before exiting the program
+ * @param [in] ... - code to perform before exiting the program
  *
  * @note If there is nothing to perform pass nothing
  *
@@ -92,15 +90,26 @@ do                                                                              
 } while (0)
 
 /**
+ * @brief Transforms a given name into a string.
+ * 
+ * @param [in] VALUE - the thing to transform.
+*/
+#define ValueToString(value) #value
+
+#ifdef NDEBUG
+#define MyAssertHard(...)
+#define MyAssertSoft(...)
+#define MyAssertSoftResult(...)
+#else
+/**
  * @brief Hard assert which tells the file, function and line where the error occurred.
  *
  * @param [in] statement - the condition to check.
  * @param [in] error - what can happen @see ErrorCode.
- * @param [in] exitCode - code to perform before exiting the program.
+ * @param [in] ... - code to perform before exiting the program.
  *
  * @note If there is nothing to perform pass nothing.
  */
-#ifdef DEBUG
 #define MyAssertHard(statement, error, ...)                                                                                 \
 if (!(statement))                                                                                                           \
 do {                                                                                                                        \
@@ -110,29 +119,18 @@ do {                                                                            
     __VA_ARGS__;                                                                                                            \
     exit(error);                                                                                                            \
 } while(0)
-#else
-#define MyAssertHard(...)
-#endif
-
-/**
- * @brief Transforms a given name into a string.
- * 
- * @param [in] VALUE - the thing to transform.
-*/
-#define ValueToString(value) #value
 
 /**
  * @brief Soft assert which tells the file, function and line where the error occurred.
  *
  * @param [in] statement - the condition to check.
  * @param [in] error - what can happen @see ErrorCode.
- * @param [in] exitCode - code to perform before exiting the program.
+ * @param [in] ... - code to perform before exiting the program.
  *
  * @note If there is nothing to perform pass nothing.
  * 
  * @return ErrorCode
  */
-#ifdef DEBUG
 #define MyAssertSoft(statement, error, ...)                                                                                 \
 if (!(statement))                                                                                                           \
 do                                                                                                                          \
@@ -143,9 +141,6 @@ do                                                                              
     __VA_ARGS__;                                                                                                            \
     return error;                                                                                                           \
 } while(0)
-#else
-#define MyAssertSoft(...)
-#endif
 
 /**
  * @brief Soft assert which tells the file, function and line where the error occurred.
@@ -153,13 +148,12 @@ do                                                                              
  * @param [in] statement - the condition to check.
  * @param [in] value - the value to form result struct.
  * @param [in] error - what can happen @see ErrorCode.
- * @param [in] exitCode - code to perform before exiting the program.
+ * @param [in] ... - code to perform before exiting the program.
  *
  * @note If there is nothing to perform pass nothing.
  * 
  * @return Result Struct.
  */
-#ifdef DEBUG
 #define MyAssertSoftResult(statement, value, error, ...)                                                                    \
 if (!(statement))                                                                                                           \
 do                                                                                                                          \
@@ -170,8 +164,6 @@ do                                                                              
     __VA_ARGS__;                                                                                                            \
     return { value, error };                                                                                                \
 } while(0)
-#else
-#define MyAssertSoftResult(...)
 #endif
 
 #define ASM(...)        \
