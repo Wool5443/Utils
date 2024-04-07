@@ -79,39 +79,39 @@ size_t GetFileSize(const char* path)
 
 #define mmix(h, k) do { k *= m; k ^= k >> r; k *= m; h *= m; h ^= k; } while (0)
 
-unsigned int CalculateHash(const void *key, size_t len, unsigned int seed)
+uint64_t CalculateHash(const void *data, size_t length, uint64_t seed)
 {
-	const unsigned int m = 0x5bd1e995;
-	const int r = 24;
-	unsigned int l = (unsigned int)len;
+	const uint64_t m = 0x5bd1e9955bd1e995;
+	const uint64_t r = 24;
+	uint64_t       l = length;
 
-	const unsigned char* data = (const unsigned char *)key;
+	const unsigned char* d = (const unsigned char*)data;
 
-	unsigned int h = seed;
-	unsigned int k;
+	uint64_t h = seed;
+	uint64_t k;
 
-	while(len >= 4)
+	while(length >= 4)
 	{
-		k = *(unsigned int*)data;
+		k = *(unsigned int*)d;
 
 		mmix(h,k);
 
-		data += 4;
-		len -= 4;
+		d += 4;
+		length -= 4;
 	}
 
-	unsigned int t = 0;
+	uint64_t t = 0;
 
-	switch(len)
+	switch(length)
 	{
 	case 3:
-		t ^= (unsigned int)(data[2] << 16);
+		t ^= (d[2] << 16);
 		break;
 	case 2:
-		t ^= (unsigned int)(data[1] << 8);
+		t ^= (d[1] << 8);
 		break;
 	case 1:
-		t ^= data[0];
+		t ^= d[0];
 		break;
 	default: 
 		break;

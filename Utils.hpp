@@ -254,6 +254,6 @@ size_t GetFileSize(const char* path);
  * @param [in] - salt
  * @return unsigned int hash
  */
-unsigned int CalculateHash(const void *key, size_t len, unsigned int seed);
+uint64_t CalculateHash(const void *key, size_t length, uint64_t seed);
 
 #endif
