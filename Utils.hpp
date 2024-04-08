@@ -175,9 +175,9 @@ asm(".intel_syntax\n"   \
 /**
  * @brief Struct to contain where some variable was created.
  * 
- * @var Owner::fileName - the file where the variable was created.
- * @var Owner::line - the line where it was created.
- * @var Owner::name - the name of the variable.
+ * @var SourceCodePosition::fileName - the file where the variable was created.
+ * @var SourceCodePosition::line - the line where it was created.
+ * @var SourceCodePosition::name - the name of the variable.
 */
 struct SourceCodePosition
 {
