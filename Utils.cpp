@@ -126,3 +126,9 @@ uint64_t CalculateHash(const void *data, size_t length, uint64_t seed)
 
 	return h;
 }
+
+void WriteSpaces(FILE* where, size_t spacesCount)
+{
+	for (size_t i = 0; i < spacesCount; i++)
+		fputc(' ', where);
+}

@@ -256,4 +256,12 @@ size_t GetFileSize(const char* path);
  */
 uint64_t CalculateHash(const void *key, size_t length, uint64_t seed);
 
+/**
+ * @brief Writes several spaces to a stream
+ * 
+ * @param [in] where - where to emit spaces
+ * @param [in] spacesCount - how much spaces to emit
+ */
+void WriteSpaces(FILE* where, size_t spacesCount);
+
 #endif
