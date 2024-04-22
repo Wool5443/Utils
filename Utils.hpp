@@ -166,11 +166,7 @@ do                                                                              
 } while(0)
 #endif
 
-#define ASM(...)        \
-asm(".intel_syntax\n"   \
-    __VA_ARGS__  "\n"   \
-    ".att_syntax\n"     \
-)
+#define ArrayLength(array) sizeof(array) / sizeof(*array)
 
 /**
  * @brief Struct to contain where some variable was created.
