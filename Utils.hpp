@@ -264,16 +264,4 @@ uint64_t CalculateHash(const void *key, size_t length, uint64_t seed);
  */
 void WriteSpaces(FILE* where, size_t spacesCount);
 
-/**
- * @brief Returns ticks passed since CPU start
- * 
- * @return uint64_t - number of ticks
- */
-static inline __attribute__((always_inline)) uint64_t GetCPUTicks()
-{
-    uint64_t lo, hi;
-    asm("rdtsc" : "=a" (lo), "=d" (hi));
-    return (hi << 32) + lo;
-}
-
 #endif
