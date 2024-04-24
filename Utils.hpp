@@ -272,4 +272,22 @@ static inline __attribute__((always_inline)) uint64_t GetCPUTicks()
     return (hi << 32) + lo;
 }
 
+struct Timer
+{
+    uint64_t startTicks;
+    uint64_t endTicks;
+
+    /**
+     * @brief Starts the timer
+     */
+    void     Start();
+
+    /**
+     * @brief Stops the timer and return how much ticks passed
+     * 
+     * @return uint64_t ticks
+     */
+    uint64_t Stop();
+};
+
 #endif

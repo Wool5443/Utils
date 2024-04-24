@@ -132,3 +132,14 @@ void WriteSpaces(FILE* where, size_t spacesCount)
 	for (size_t i = 0; i < spacesCount; i++)
 		fputc(' ', where);
 }
+
+void Timer::Start()
+{
+	this->startTicks = GetCPUTicks();
+}
+
+uint64_t Timer::Stop()
+{
+	this->endTicks   = GetCPUTicks();
+	return endTicks - startTicks;
+}
