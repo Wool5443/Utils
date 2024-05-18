@@ -48,6 +48,21 @@ static const char* ERROR_CODE_NAMES[] =
 static const size_t SIZET_POISON = (size_t)-1;
 
 /**
+ * @brief Prints colored error to stderr
+ * 
+ * @param error
+ */
+#define PRINT_ERROR(error)                                                                                                  \
+do                                                                                                                          \
+{                                                                                                                           \
+    ErrorCode _error = error;                                                                                               \
+    if (_error) SetConsoleColor(stdout, COLOR_RED); else SetConsoleColor(stdout, COLOR_GREEN);                              \
+    fprintf(stdout, "%s in %s in %s in line: %d\n", ERROR_CODE_NAMES[_error], __FILE__, __PRETTY_FUNCTION__, __LINE__);     \
+    SetConsoleColor(stdout, COLOR_WHITE);                                                                                   \
+    fflush(stdout);                                                                                                         \
+} while (0)
+
+/**
  * @brief Returns if error and executed given code
  *
  * @param [in] error - some error
@@ -63,6 +78,7 @@ do                                                                              
     __typeof__(error) _error = error;                                                                                       \
     if (_error)                                                                                                             \
     {                                                                                                                       \
+        PRINT_ERROR(_error);                                                                                                \
         __VA_ARGS__;                                                                                                        \
         return _error;                                                                                                      \
     }                                                                                                                       \
@@ -84,24 +100,10 @@ do                                                                              
     __typeof__(result) _result = result;                                                                                    \
     if (_result.error)                                                                                                      \
     {                                                                                                                       \
+        PRINT_ERROR(_error);                                                                                                \
         __VA_ARGS__;                                                                                                        \
         return { poison, _result.error };                                                                                   \
     }                                                                                                                       \
-} while (0)
-
-/**
- * @brief Prints colored error to stderr
- * 
- * @param error
- */
-#define PRINT_ERROR(error)                                                                                                  \
-do                                                                                                                          \
-{                                                                                                                           \
-    ErrorCode _error = error;                                                                                               \
-    if (_error) SetConsoleColor(stdout, COLOR_RED); else SetConsoleColor(stdout, COLOR_GREEN);                              \
-    fprintf(stdout, "%s in %s in %s in line: %d\n", ERROR_CODE_NAMES[_error], __FILE__, __PRETTY_FUNCTION__, __LINE__);     \
-    SetConsoleColor(stdout, COLOR_WHITE);                                                                                   \
-    fflush(stdout);                                                                                                         \
 } while (0)
 
 /**
@@ -128,9 +130,7 @@ do                                                                              
 #define MyAssertHard(statement, error, ...)                                                                                 \
 if (!(statement))                                                                                                           \
 do {                                                                                                                        \
-    SetConsoleColor(stderr, COLOR_RED);                                                                                     \
     PRINT_ERROR(error);                                                                                                     \
-    SetConsoleColor(stderr, COLOR_WHITE);                                                                                   \
     __VA_ARGS__;                                                                                                            \
     exit(error);                                                                                                            \
 } while(0)
@@ -150,9 +150,7 @@ do {                                                                            
 if (!(statement))                                                                                                           \
 do                                                                                                                          \
 {                                                                                                                           \
-    SetConsoleColor(stderr, COLOR_RED);                                                                                     \
     PRINT_ERROR(error);                                                                                                     \
-    SetConsoleColor(stderr, COLOR_WHITE);                                                                                   \
     __VA_ARGS__;                                                                                                            \
     return error;                                                                                                           \
 } while(0)
@@ -173,9 +171,7 @@ do                                                                              
 if (!(statement))                                                                                                           \
 do                                                                                                                          \
 {                                                                                                                           \
-    SetConsoleColor(stderr, COLOR_RED);                                                                                     \
     PRINT_ERROR(error);                                                                                                     \
-    SetConsoleColor(stderr, COLOR_WHITE);                                                                                   \
     __VA_ARGS__;                                                                                                            \
     return { value, error };                                                                                                \
 } while(0)
