@@ -52,14 +52,17 @@ static const size_t SIZET_POISON = (size_t)-1;
  * 
  * @param error
  */
-#define PRINT_ERROR(error)                                                                                                  \
-do                                                                                                                          \
-{                                                                                                                           \
-    ErrorCode _error = error;                                                                                               \
-    if (_error) SetConsoleColor(stdout, COLOR_RED); else SetConsoleColor(stdout, COLOR_GREEN);                              \
-    fprintf(stdout, "%s in %s in %s in line: %d\n", ERROR_CODE_NAMES[_error], __FILE__, __PRETTY_FUNCTION__, __LINE__);     \
-    SetConsoleColor(stdout, COLOR_WHITE);                                                                                   \
-    fflush(stdout);                                                                                                         \
+#define PRINT_ERROR(error)                                                  \
+do                                                                          \
+{                                                                           \
+    ErrorCode _print_error = error;                                         \
+    if (_print_error ) SetConsoleColor(stdout, COLOR_RED);                  \
+    else SetConsoleColor(stdout, COLOR_GREEN);                              \
+    fprintf(stdout, "%s in %s in %s in line: %d\n",                         \
+            ERROR_CODE_NAMES[_print_error], __FILE__, __PRETTY_FUNCTION__,  \
+            __LINE__);                                                      \
+    SetConsoleColor(stdout, COLOR_WHITE);                                   \
+    fflush(stdout);                                                         \
 } while (0)
 
 /**
@@ -72,16 +75,16 @@ do                                                                              
  *
  * @return error
  */
-#define RETURN_ERROR(error, ...)                                                                                            \
-do                                                                                                                          \
-{                                                                                                                           \
-    __typeof__(error) _error = error;                                                                                       \
-    if (_error)                                                                                                             \
-    {                                                                                                                       \
-        PRINT_ERROR(_error);                                                                                                \
-        __VA_ARGS__;                                                                                                        \
-        return _error;                                                                                                      \
-    }                                                                                                                       \
+#define RETURN_ERROR(error, ...)                                            \
+do                                                                          \
+{                                                                           \
+    ErrorCode _ret_error = error;                                           \
+    if (_ret_error)                                                         \
+    {                                                                       \
+        PRINT_ERROR(_ret_error);                                            \
+        __VA_ARGS__;                                                        \
+        return _ret_error ;                                                 \
+    }                                                                       \
 } while (0)
 
 /**
@@ -94,16 +97,16 @@ do                                                                              
  *
  * @return result
  */
-#define RETURN_ERROR_RESULT(result, poison, ...)                                                                            \
-do                                                                                                                          \
-{                                                                                                                           \
-    __typeof__(result) _result = result;                                                                                    \
-    if (_result.error)                                                                                                      \
-    {                                                                                                                       \
-        PRINT_ERROR(_error);                                                                                                \
-        __VA_ARGS__;                                                                                                        \
-        return { poison, _result.error };                                                                                   \
-    }                                                                                                                       \
+#define RETURN_ERROR_RESULT(result, poison, ...)                            \
+do                                                                          \
+{                                                                           \
+    __typeof__(result) _ret_result = result;                                \
+    if (_ret_result.error)                                                  \
+    {                                                                       \
+        PRINT_ERROR(_ret_result.error);                                     \
+        __VA_ARGS__;                                                        \
+        return { poison, _ret_result.error };                               \
+    }                                                                       \
 } while (0)
 
 /**
@@ -127,12 +130,12 @@ do                                                                              
  *
  * @note If there is nothing to perform pass nothing.
  */
-#define MyAssertHard(statement, error, ...)                                                                                 \
-if (!(statement))                                                                                                           \
-do {                                                                                                                        \
-    PRINT_ERROR(error);                                                                                                     \
-    __VA_ARGS__;                                                                                                            \
-    exit(error);                                                                                                            \
+#define MyAssertHard(statement, error, ...)                                 \
+if (!(statement))                                                           \
+do {                                                                        \
+    PRINT_ERROR(error);                                                     \
+    __VA_ARGS__;                                                            \
+    exit(error);                                                            \
 } while(0)
 
 /**
@@ -146,13 +149,13 @@ do {                                                                            
  * 
  * @return ErrorCode
  */
-#define MyAssertSoft(statement, error, ...)                                                                                 \
-if (!(statement))                                                                                                           \
-do                                                                                                                          \
-{                                                                                                                           \
-    PRINT_ERROR(error);                                                                                                     \
-    __VA_ARGS__;                                                                                                            \
-    return error;                                                                                                           \
+#define MyAssertSoft(statement, error, ...)                                 \
+if (!(statement))                                                           \
+do                                                                          \
+{                                                                           \
+    PRINT_ERROR(error);                                                     \
+    __VA_ARGS__;                                                            \
+    return error;                                                           \
 } while(0)
 
 /**
@@ -167,13 +170,13 @@ do                                                                              
  * 
  * @return Result Struct.
  */
-#define MyAssertSoftResult(statement, value, error, ...)                                                                    \
-if (!(statement))                                                                                                           \
-do                                                                                                                          \
-{                                                                                                                           \
-    PRINT_ERROR(error);                                                                                                     \
-    __VA_ARGS__;                                                                                                            \
-    return { value, error };                                                                                                \
+#define MyAssertSoftResult(statement, value, error, ...)                    \
+if (!(statement))                                                           \
+do                                                                          \
+{                                                                           \
+    PRINT_ERROR(error);                                                     \
+    __VA_ARGS__;                                                            \
+    return { value, error };                                                \
 } while(0)
 #endif
 
