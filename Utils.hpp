@@ -282,7 +282,7 @@ void WriteSpaces(FILE* where, size_t spacesCount);
 static inline __attribute__((always_inline)) uint64_t GetCPUTicks()
 {
     uint64_t lo, hi;
-    asm("rdtscp" : "=a" (lo), "=d" (hi));
+    asm("lfence;rdtsc;lfence" : "=a" (lo), "=d" (hi));
     return (hi << 32) + lo;
 }
 
