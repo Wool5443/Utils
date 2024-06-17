@@ -56,13 +56,13 @@ static const size_t SIZET_POISON = (size_t)-1;
 do                                                                          \
 {                                                                           \
     __typeof__(error) _print_error = error;                                 \
-    if (_print_error) SetConsoleColor(stdout, COLOR_RED);     \
-    else SetConsoleColor(stdout, COLOR_GREEN);                 \
-    fprintf(stdout, "%s in %s in %s in line: %d\n",                         \
-            ERROR_CODE_NAMES[_print_error], __FILE__, __PRETTY_FUNCTION__,  \
-            __LINE__);                                                      \
-    SetConsoleColor(stdout, COLOR_WHITE);                      \
-    fflush(stdout);                                                  \
+    if (_print_error) SetConsoleColor(stdout, COLOR_RED);                   \
+    else SetConsoleColor(stdout, COLOR_GREEN);                              \
+    fprintf(stdout, "%s in %s:%d in %s\n",                                  \
+            ERROR_CODE_NAMES[_print_error], __FILE__, __LINE__,             \
+            __PRETTY_FUNCTION__);                                           \
+    SetConsoleColor(stdout, COLOR_WHITE);                                   \
+    fflush(stdout);                                                         \
 } while (0)
 
 /**
