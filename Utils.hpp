@@ -62,7 +62,6 @@ struct Error
     Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept;
     Error() noexcept
         : code(EVERYTHING_FINE), file(nullptr), line(0), function(nullptr) {}
-    ~Error() = delete;
 
     operator bool() const noexcept
     {
