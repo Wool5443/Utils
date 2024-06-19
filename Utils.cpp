@@ -29,6 +29,18 @@ const char* Error::GetErrorName() const noexcept
 	return ERROR_CODE_NAMES[(size_t)this->code];
 }
 
+void Error::Print() const noexcept
+{
+	if (*this) SetConsoleColor(stdout, ConsoleColor::RED);
+	else       SetConsoleColor(stdout, ConsoleColor::GREEN);
+
+	fprintf(stdout, "%s in %s:%zu in %s\n",
+					 this->GetErrorName(), this->file, this->line,
+					 this->function);
+	SetConsoleColor(stdout, ConsoleColor::WHITE);
+	fflush(stdout);
+}
+
 const double ABSOLUTE_TOLERANCE = 1e-5;
 
 bool IsEqual(const double x1, const double x2)

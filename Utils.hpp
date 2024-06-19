@@ -11,14 +11,14 @@
  */
 enum class ConsoleColor
 {
-    COLOR_BLACK = 30,
-    COLOR_RED,
-    COLOR_GREEN,
-    COLOR_YELLOW,
-    COLOR_BLUE,
-    COLOR_MAGENTA,
-    COLOR_CYAN,
-    COLOR_WHITE,
+    BLACK = 30,
+    RED,
+    GREEN,
+    YELLOW,
+    BLUE,
+    MAGENTA,
+    CYAN,
+    WHITE,
 };
 
 /** @enum ErrorCode
@@ -50,7 +50,13 @@ struct Error
 
     Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept;
 
+    operator bool() const noexcept
+    {
+        return (bool)code;
+    }
+
     const char* GetErrorName() const noexcept;
+    void        Print()        const noexcept;
 };
 
 /**
@@ -58,18 +64,6 @@ struct Error
  *
  * @param error
  */
-#define PRINT_ERROR(error)                                                  \
-do                                                                          \
-{                                                                           \
-    __typeof__(error) _print_error = error;                                 \
-    if (_print_error) SetConsoleColor(stdout, COLOR_RED);                   \
-    else SetConsoleColor(stdout, COLOR_GREEN);                              \
-    fprintf(stdout, "%s in %s:%d in %s\n",                                  \
-            ERROR_CODE_NAMES[_print_error], __FILE__, __LINE__,             \
-            __PRETTY_FUNCTION__);                                           \
-    SetConsoleColor(stdout, COLOR_WHITE);                                   \
-    fflush(stdout);                                                         \
-} while (0)
 
 
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
