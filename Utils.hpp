@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 
 /** @enum ConsoleColor
  * @brief Represents colors for @see SetConsoleColor
@@ -74,6 +75,10 @@ struct Error
     operator ErrorCode() const noexcept
     {
         return code;
+    }
+    operator double() const noexcept
+    {
+        return NAN;
     }
 
     /**
