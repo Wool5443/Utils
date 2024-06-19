@@ -22,7 +22,7 @@ enum class ConsoleColor
 };
 
 /** @enum ErrorCode
- * @brief Represents possible error codes for @see MyAssertHard()
+ * @brief Represents possible error codes
  */
 enum ErrorCode
 {
@@ -41,13 +41,24 @@ static const size_t SIZET_POISON = (size_t)-1;
 #define GET_PRETTY_FUNCTION() __PRETTY_FUNCTION__
 #define CREATE_ERROR(errorCode) Error((errorCode), GET_FILE_NAME(), GET_LINE(), GET_PRETTY_FUNCTION())
 
+/** @struct Error
+ * @brief Struct for handling errors
+ */
 struct Error
 {
-    ErrorCode   code;
-    const char* file;
-    size_t      line;
-    const char* function;
+    ErrorCode   code; /**< error code*/
+    const char* file; /**< file where error occured*/
+    size_t      line; /**< line where error occured*/
+    const char* function; /**< function where error occured*/
 
+    /**
+     * @brief Construct a new Error object
+     * 
+     * @param code 
+     * @param file 
+     * @param line 
+     * @param function 
+     */
     Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept;
 
     operator bool() const noexcept
@@ -59,14 +70,31 @@ struct Error
         return (int)code;
     }
 
-    const char* GetErrorName() const noexcept;
-    void        Print()        const noexcept;
+    /**
+     * @brief Get what the error means
+     * 
+     * @return const char* 
+     */
+    const char* GetErrorName()    const noexcept;
+    /**
+     * @brief Prints error to stdout
+     */
+    void        Print()           const noexcept;
+    /**
+     * @brief Prints error into a file
+     * 
+     * @param file 
+     */
+    void        Print(FILE* file) const noexcept;
 };
 
 #ifdef NDEBUG
 #define SoftAssert(...)
 #define SoftAssertResult(...)
 #else
+/**
+ * @brief Soft assert
+ */
 #define SoftAssert(expression, errorCode, ...)                      \
 do                                                                  \
 {                                                                   \
@@ -79,6 +107,9 @@ do                                                                  \
     }                                                               \
 } while(0)
 
+/**
+ * @brief Soft assert if function returns a result
+ */
 #define SoftAssertResult(expression, poison, errorCode, ...)        \
 do                                                                  \
 {                                                                   \
@@ -92,6 +123,9 @@ do                                                                  \
 } while(0)
 #endif
 
+/**
+ * @brief returns error if it is not EVERYTHING_FINE
+ */
 #define RETURN_ERROR(error)                                         \
 do                                                                  \
 {                                                                   \
@@ -100,6 +134,9 @@ do                                                                  \
         return _error;                                              \
 } while(0)
 
+/**
+ * @brief returns error and poison if it is not EVERYTHING_FINE
+ */
 #define RETURN_ERROR_RESULT(error, poison)                          \
 do                                                                  \
 {                                                                   \
@@ -108,6 +145,9 @@ do                                                                  \
         return { poison, _error };                                  \
 } while(0)
 
+/**
+ * @brief returns result if it contains an error
+ */
 #define RETURN_RESULT(result)                                       \
 do                                                                  \
 {                                                                   \
