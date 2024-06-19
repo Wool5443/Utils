@@ -132,34 +132,43 @@ do                                                                  \
 /**
  * @brief returns error if it is not EVERYTHING_FINE
  */
-#define RETURN_ERROR(error)                                         \
+#define RETURN_ERROR(error, ...)                                    \
 do                                                                  \
 {                                                                   \
     Error _error = error;                                           \
     if (_error)                                                     \
+    {                                                               \
+        __VA_ARGS__;                                                \
         return _error;                                              \
+    }                                                               \
 } while(0)
 
 /**
  * @brief returns error and poison if it is not EVERYTHING_FINE
  */
-#define RETURN_ERROR_RESULT(error, poison)                          \
+#define RETURN_ERROR_RESULT(error, poison, ...)                     \
 do                                                                  \
 {                                                                   \
     Error _error = error;                                           \
     if (_error)                                                     \
+    {                                                               \
+        __VA_ARGS__;                                                \
         return { poison, _error };                                  \
+    }                                                               \
 } while(0)
 
 /**
  * @brief returns result if it contains an error
  */
-#define RETURN_RESULT(result)                                       \
+#define RETURN_RESULT(result, ...)                                  \
 do                                                                  \
 {                                                                   \
     __typeof__(result) _result = result;                            \
     if (_result.error)                                              \
+    {                                                               \
+        __VA_ARGS__;                                                \
         return _result;                                             \
+    }                                                               \
 } while(0)
 
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
