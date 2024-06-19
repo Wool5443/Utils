@@ -71,6 +71,10 @@ struct Error
     {
         return (int)code;
     }
+    operator ErrorCode() const noexcept
+    {
+        return code;
+    }
 
     /**
      * @brief Get what the error means
@@ -154,8 +158,8 @@ do                                                                  \
 do                                                                  \
 {                                                                   \
     __typeof__(result) _result = result;                            \
-    if (result.error)                                               \
-        return result;                                              \
+    if (_result.error)                                              \
+        return _result;                                             \
 } while(0)
 
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
