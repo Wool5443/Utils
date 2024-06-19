@@ -39,7 +39,7 @@ static const size_t SIZET_POISON = (size_t)-1;
 #define GET_FILE_NAME()       __FILE__
 #define GET_LINE()            __LINE__
 #define GET_PRETTY_FUNCTION() __PRETTY_FUNCTION__
-#define CREATE_ERROR(code) Error(code, GET_FILE_NAME(), GET_LINE(), GET_PRETTY_FUNCTION())
+#define CREATE_ERROR(errorCode) Error((errorCode), GET_FILE_NAME(), GET_LINE(), GET_PRETTY_FUNCTION())
 
 struct Error
 {
@@ -54,17 +54,43 @@ struct Error
     {
         return (bool)code;
     }
+    operator int() const noexcept
+    {
+        return (int)code;
+    }
 
     const char* GetErrorName() const noexcept;
     void        Print()        const noexcept;
 };
 
-/**
- * @brief Prints colored error to stderr
- *
- * @param error
- */
+#ifdef NDEBUG
+#define SoftAssert(...)
+#define SoftAssertResult(...)
+#else
+#define SoftAssert(expression, errorCode, ...)                      \
+do                                                                  \
+{                                                                   \
+    if (!(expression))                                              \
+    {                                                               \
+        Error _error = CREATE_ERROR(errorCode);                     \
+        _error.Print();                                             \
+        __VA_ARGS__;                                                \
+        return _error;                                              \
+    }                                                               \
+} while(0)
 
+#define SoftAssertResult(expression, poison, errorCode, ...)        \
+do                                                                  \
+{                                                                   \
+    if (!(expression))                                              \
+    {                                                               \
+        Error _error = CREATE_ERROR(errorCode);                     \
+        _error.Print();                                             \
+        __VA_ARGS__;                                                \
+        return { poison, _error };                                  \
+    }                                                               \
+} while(0)
+#endif
 
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
 
