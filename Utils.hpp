@@ -92,6 +92,30 @@ do                                                                  \
 } while(0)
 #endif
 
+#define RETURN_ERROR(error)                                         \
+do                                                                  \
+{                                                                   \
+    Error _error = error;                                           \
+    if (_error)                                                     \
+        return _error;                                              \
+} while(0)
+
+#define RETURN_ERROR_RESULT(error, poison)                          \
+do                                                                  \
+{                                                                   \
+    Error _error = error;                                           \
+    if (_error)                                                     \
+        return { poison, _error };                                  \
+} while(0)
+
+#define RETURN_RESULT(result)                                       \
+do                                                                  \
+{                                                                   \
+    __typeof__(result) _result = result;                            \
+    if (result.error)                                               \
+        return result;                                              \
+} while(0)
+
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
 
  /**
