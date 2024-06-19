@@ -92,9 +92,6 @@ do                                                                  \
 } while(0)
 #endif
 
-<<<<<<< HEAD
-#define ArrayLength(array) sizeof(array) / sizeof(*(array))
-=======
 #define RETURN_ERROR(error)                                         \
 do                                                                  \
 {                                                                   \
@@ -102,7 +99,6 @@ do                                                                  \
     if (_error)                                                     \
         return _error;                                              \
 } while(0)
->>>>>>> Advanced-Error-Handling
 
 #define RETURN_ERROR_RESULT(error, poison)                          \
 do                                                                  \
