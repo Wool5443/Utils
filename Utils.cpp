@@ -7,6 +7,28 @@
 #include <sys/stat.h>
 #include "Utils.hpp"
 
+Error::Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept
+{
+	this->code     = code;
+	this->file     = file;
+	this->line     = line;
+	this->function = function;
+}
+
+static const char* ERROR_CODE_NAMES[] =
+{
+    "EVERYTHING_FINE", "ERROR_NULLPTR", "ERROR_BAD_NUMBER", "ERROR_BAD_FILE", "ERROR_OVERLAP",
+    "ERROR_INDEX_OUT_OF_BOUNDS", "ERROR_NO_MEMORY", "ERROR_NO_COMPARATOR", "ERROR_BAD_SIZE",
+    "ERROR_BAD_VALUE", "ERROR_DEAD_CANARY", "ERROR_BAD_HASH", "ERROR_ZERO_DIVISION",
+    "ERROR_SYNTAX", "ERROR_WRONG_LABEL_SIZE", "ERROR_TOO_MANY_LABELS",
+    "ERROR_NOT_FOUND", "ERROR_BAD_FIELDS", "ERROR_BAD_TREE", "ERROR_NO_ROOT",
+    "ERROR_TREE_LOOP", "ERROR_SDL", "ERROR_NOT_OWNER", "EXIT",
+};
+const char* Error::GetErrorName() const noexcept
+{
+	return ERROR_CODE_NAMES[(size_t)this->code];
+}
+
 const double ABSOLUTE_TOLERANCE = 1e-5;
 
 bool IsEqual(const double x1, const double x2)
@@ -62,15 +84,13 @@ char* ReadFileToBuf(const char* filePath)
 	return buf;
 }
 
-void SetConsoleColor(FILE* where, enum Color color)
+void SetConsoleColor(FILE* where, ConsoleColor color)
 {
 	fprintf(where, "\033[0;%dm", (int)color);
 }
 
 size_t GetFileSize(const char* path)
 {
-    MyAssertHard(path, ERROR_NULLPTR, );
-
     struct stat result = {};
     stat(path, &result);
 

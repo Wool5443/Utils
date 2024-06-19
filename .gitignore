@@ -1,2 +1,3 @@
-*.json
-*.o
+*
+!Utils.cpp
+!Utils.hpp
