@@ -8,12 +8,7 @@
 #include "Utils.hpp"
 
 Error::Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept
-{
-	this->code     = code;
-	this->file     = file;
-	this->line     = line;
-	this->function = function;
-}
+	: code(code), file(file), line(line), function(function) {}
 
 static const char* ERROR_CODE_NAMES[] =
 {
