@@ -180,7 +180,7 @@ do                                                                          \
 } while(0)
 #endif
 
-#define ArrayLength(array) sizeof(array) / sizeof(*array)
+#define ArrayLength(array) sizeof(array) / sizeof(*(array))
 
 /**
  * @brief Struct to contain where some variable was created.
