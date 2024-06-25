@@ -113,7 +113,7 @@ do                                                                  \
 {                                                                   \
     if (!(expression))                                              \
     {                                                               \
-        Error _error = CREATE_ERROR(errorCode);                     \
+        Utils::Error _error = CREATE_ERROR(errorCode);              \
         _error.Print();                                             \
         __VA_ARGS__;                                                \
         return _error;                                              \
@@ -142,7 +142,7 @@ do                                                                  \
 #define RETURN_ERROR(error, ...)                                    \
 do                                                                  \
 {                                                                   \
-    Error _error = error;                                           \
+    Utils::Error _error = error;                                    \
     if (_error)                                                     \
     {                                                               \
         __VA_ARGS__;                                                \
@@ -156,7 +156,7 @@ do                                                                  \
 #define RETURN_ERROR_RESULT(error, poison, ...)                     \
 do                                                                  \
 {                                                                   \
-    Error _error = error;                                           \
+    Utils::Error _error = error;                                    \
     if (_error)                                                     \
     {                                                               \
         __VA_ARGS__;                                                \
