@@ -2,11 +2,13 @@
 
 #pragma once
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <math.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdint>
+#include <cmath>
 
+namespace Utils
+{
 /** @enum ConsoleColor
  * @brief Represents colors for @see SetConsoleColor
  */
@@ -25,7 +27,7 @@ enum class ConsoleColor
 /** @enum ErrorCode
  * @brief Represents possible error codes
  */
-enum ErrorCode
+enum class ErrorCode
 {
     EVERYTHING_FINE = 0, ERROR_NULLPTR, ERROR_BAD_NUMBER, ERROR_BAD_FILE, ERROR_OVERLAP,
     ERROR_INDEX_OUT_OF_BOUNDS, ERROR_NO_MEMORY, ERROR_NO_COMPARATOR, ERROR_BAD_SIZE,
@@ -62,7 +64,7 @@ struct Error
      */
     Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept;
     Error() noexcept
-        : code(EVERYTHING_FINE), file(""), line(0), function("") {}
+        : code(ErrorCode::EVERYTHING_FINE), file(""), line(0), function("") {}
 
     operator bool() const noexcept
     {
@@ -285,3 +287,4 @@ struct Timer
      */
     uint64_t Stop();
 };
+}

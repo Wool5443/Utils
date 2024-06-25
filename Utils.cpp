@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include "Utils.hpp"
 
-Error::Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept
+Utils::Error::Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept
 	: code(code), file(file), line(line), function(function) {}
 
 static const char* ERROR_CODE_NAMES[] =
@@ -19,12 +19,12 @@ static const char* ERROR_CODE_NAMES[] =
     "ERROR_NOT_FOUND", "ERROR_BAD_FIELDS", "ERROR_BAD_TREE", "ERROR_NO_ROOT",
     "ERROR_TREE_LOOP", "ERROR_SDL", "ERROR_NOT_OWNER", "EXIT",
 };
-const char* Error::GetErrorName() const noexcept
+const char* Utils::Error::GetErrorName() const noexcept
 {
 	return ERROR_CODE_NAMES[(size_t)this->code];
 }
 
-void Error::Print() const noexcept
+void Utils::Error::Print() const noexcept
 {
 	if (*this) SetConsoleColor(stdout, ConsoleColor::RED);
 	else       SetConsoleColor(stdout, ConsoleColor::GREEN);
@@ -33,7 +33,7 @@ void Error::Print() const noexcept
 	fflush(stdout);
 }
 
-void Error::Print(FILE* file) const noexcept
+void Utils::Error::Print(FILE* file) const noexcept
 {
 	fprintf(file, "%s in %s:%zu in %s\n",
 			this->GetErrorName(), this->file, this->line,
@@ -43,12 +43,12 @@ void Error::Print(FILE* file) const noexcept
 
 const double ABSOLUTE_TOLERANCE = 1e-5;
 
-bool IsEqual(const double x1, const double x2)
+bool Utils::IsEqual(const double x1, const double x2)
 {
 	return fabs(x1 - x2) < ABSOLUTE_TOLERANCE;
 }
 
-void Swap(void* a, void* b, size_t size)
+void Utils::Swap(void* a, void* b, size_t size)
 {
     char* _a = (char*)a;
     char* _b = (char*)b;
@@ -61,13 +61,13 @@ void Swap(void* a, void* b, size_t size)
     }
 }
 
-void ClearBuffer(FILE* where)
+void Utils::ClearBuffer(FILE* where)
 {
 	int c = fgetc(where);
 	while (c != '\n' && c != EOF) { c = fgetc(where); }
 }
 
-bool CheckInput(FILE* where)
+bool Utils::CheckInput(FILE* where)
 {
 	int c = fgetc(where);
 	while (c == ' ' || c == '\t') { c = fgetc(where); }
@@ -75,7 +75,7 @@ bool CheckInput(FILE* where)
 	return c == '\n';
 }
 
-char* ReadFileToBuf(const char* filePath)
+char* Utils::ReadFileToBuf(const char* filePath)
 {
 	if (!filePath)
 		return nullptr;
@@ -96,12 +96,12 @@ char* ReadFileToBuf(const char* filePath)
 	return buf;
 }
 
-void SetConsoleColor(FILE* where, ConsoleColor color)
+void Utils::SetConsoleColor(FILE* where, ConsoleColor color)
 {
 	fprintf(where, "\033[0;%dm", (int)color);
 }
 
-size_t GetFileSize(const char* path)
+size_t Utils::GetFileSize(const char* path)
 {
     struct stat result = {};
     stat(path, &result);
@@ -111,7 +111,7 @@ size_t GetFileSize(const char* path)
 
 #define mmix(h, k) do { k *= m; k ^= k >> r; k *= m; h *= m; h ^= k; } while (0)
 
-uint64_t CalculateHash(const void *data, size_t length, uint64_t seed)
+uint64_t Utils::CalculateHash(const void *data, size_t length, uint64_t seed)
 {
 	const uint64_t m = 0x5bd1e9955bd1e995;
 	const uint64_t r = 24;
@@ -159,18 +159,18 @@ uint64_t CalculateHash(const void *data, size_t length, uint64_t seed)
 	return h;
 }
 
-void WriteSpaces(FILE* where, size_t spacesCount)
+void Utils::WriteSpaces(FILE* where, size_t spacesCount)
 {
 	for (size_t i = 0; i < spacesCount; i++)
 		fputc(' ', where);
 }
 
-void Timer::Start()
+void Utils::Timer::Start()
 {
 	this->startTicks = GetCPUTicks();
 }
 
-uint64_t Timer::Stop()
+uint64_t Utils::Timer::Stop()
 {
 	this->endTicks   = GetCPUTicks();
 	return endTicks - startTicks;
