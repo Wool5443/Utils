@@ -42,7 +42,7 @@ static const size_t SIZET_POISON = (size_t)-1;
 #define GET_FILE_NAME()       __FILE__
 #define GET_LINE()            __LINE__
 #define GET_PRETTY_FUNCTION() __PRETTY_FUNCTION__
-#define CREATE_ERROR(errorCode) Error((errorCode), GET_FILE_NAME(), GET_LINE(), GET_PRETTY_FUNCTION())
+#define CREATE_ERROR(errorCode) Utils::Error((errorCode), GET_FILE_NAME(), GET_LINE(), GET_PRETTY_FUNCTION())
 
 /** @struct Error
  * @brief Struct for handling errors
