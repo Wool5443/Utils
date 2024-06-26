@@ -121,7 +121,7 @@ do                                                                  \
 } while(0)
 
 /**
- * @brief Soft assert if function returns a result
+ * @brief Soft assert for functions returning a result
  */
 #define SoftAssertResult(expression, poison, errorCode, ...)        \
 do                                                                  \
@@ -135,6 +135,21 @@ do                                                                  \
     }                                                               \
 } while(0)
 #endif
+
+/**
+ * @brief Hard assert
+ */
+#define HardAssert(expression, errorCode, ...)                      \
+do                                                                  \
+{                                                                   \
+    if (!(expression))                                              \
+    {                                                               \
+        Utils::Error _error = CREATE_ERROR(errorCode);              \
+        _error.Print();                                             \
+        __VA_ARGS__;                                                \
+        exit(_error);                                               \
+    }                                                               \
+} while(0)
 
 /**
  * @brief returns error if it is not EVERYTHING_FINE
