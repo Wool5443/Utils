@@ -86,7 +86,7 @@ struct Error
     /**
      * @brief Get what the error means
      * 
-     * @return const char* 
+     * @return const char*
      */
     const char* GetErrorName()    const noexcept;
     /**
