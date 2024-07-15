@@ -193,6 +193,21 @@ do                                                                  \
     }                                                               \
 } while(0)
 
+template<typename T>
+struct Result
+{
+    T     value;
+    Error error;
+
+    Result(const T& value)
+        : value(value), error(Error()) {}
+    Result(const T& value, Error error)
+        : value(value), error(error) {}
+
+    operator bool() { return error; }
+    operator T()    { return value; }
+};
+
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
 
  /**
