@@ -27,7 +27,7 @@ enum class ConsoleColor
 /** @enum ErrorCode
  * @brief Represents possible error codes
  */
-enum class ErrorCode
+enum ErrorCode
 {
     EVERYTHING_FINE = 0, ERROR_NULLPTR, ERROR_BAD_NUMBER, ERROR_BAD_FILE, ERROR_OVERLAP,
     ERROR_INDEX_OUT_OF_BOUNDS, ERROR_NO_MEMORY, ERROR_NO_COMPARATOR, ERROR_BAD_SIZE,
