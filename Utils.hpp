@@ -78,10 +78,6 @@ struct Error
     {
         return code;
     }
-    operator double() const noexcept
-    {
-        return NAN;
-    }
 
     /**
      * @brief Get what the error means
@@ -99,6 +95,27 @@ struct Error
      * @param file 
      */
     void        Print(FILE* file) const noexcept;
+};
+
+
+/** @struct Result
+ * @brief Struct for returning errors with values
+ * 
+ * @tparam T type of value
+ */
+template<typename T>
+struct Result
+{
+    T     value; /**< value */
+    Error error; /**< error */
+
+    Result(const T& value)
+        : value(value), error(Error()) {}
+    Result(const T& value, Error error)
+        : value(value), error(error) {}
+
+    operator bool()  { return error; }
+    operator Error() { return error; }
 };
 
 #ifdef NDEBUG
@@ -128,7 +145,7 @@ do                                                                  \
 {                                                                   \
     if (!(expression))                                              \
     {                                                               \
-        Error _error = CREATE_ERROR(errorCode);                     \
+        Utils::Error _error = CREATE_ERROR(errorCode);              \
         _error.Print();                                             \
         __VA_ARGS__;                                                \
         return { poison, _error };                                  \
@@ -192,21 +209,6 @@ do                                                                  \
         return _result;                                             \
     }                                                               \
 } while(0)
-
-template<typename T>
-struct Result
-{
-    T     value;
-    Error error;
-
-    Result(const T& value)
-        : value(value), error(Error()) {}
-    Result(const T& value, Error error)
-        : value(value), error(error) {}
-
-    operator bool() { return error; }
-    operator T()    { return value; }
-};
 
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
 
