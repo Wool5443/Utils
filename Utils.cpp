@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include "Utils.hpp"
 
-Utils::Error::Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept
+Utils::Error::Error(ErrorCode code, const char* file, std::size_t line, const char* function) noexcept
 	: code(code), file(file), line(line), function(function) {}
 
 static const char* ERROR_CODE_NAMES[] =
@@ -21,14 +21,14 @@ static const char* ERROR_CODE_NAMES[] =
 };
 const char* Utils::Error::GetErrorName() const noexcept
 {
-	return ERROR_CODE_NAMES[(size_t)this->code];
+	return ERROR_CODE_NAMES[(std::size_t)this->code];
 }
 
 void Utils::Error::Print() const noexcept
 {
 	if (*this) SetConsoleColor(stdout, ConsoleColor::RED);
 	else       SetConsoleColor(stdout, ConsoleColor::GREEN);
-	this->Print(stdout);
+	Print(stdout);
 	SetConsoleColor(stdout, ConsoleColor::WHITE);
 	fflush(stdout);
 }
@@ -36,8 +36,8 @@ void Utils::Error::Print() const noexcept
 void Utils::Error::Print(FILE* file) const noexcept
 {
 	fprintf(file, "%s in %s:%zu in %s\n",
-			this->GetErrorName(), this->file, this->line,
-			this->function);
+			GetErrorName(), this->file, line,
+			function);
 	fflush(file);
 }
 
@@ -48,12 +48,12 @@ bool Utils::IsEqual(const double x1, const double x2)
 	return fabs(x1 - x2) < ABSOLUTE_TOLERANCE;
 }
 
-void Utils::Swap(void* a, void* b, size_t size)
+void Utils::Swap(void* a, void* b, std::size_t size)
 {
     char* _a = (char*)a;
     char* _b = (char*)b;
 
-    for (size_t curByte = 0; curByte < size; curByte++)
+    for (std::size_t curByte = 0; curByte < size; curByte++)
     {
         char _temp = _a[curByte];
         _a[curByte] = _b[curByte];
@@ -80,7 +80,7 @@ char* Utils::ReadFileToBuf(const char* filePath)
 	if (!filePath)
 		return nullptr;
 
-	size_t fileSize = GetFileSize(filePath);
+	std::size_t fileSize = GetFileSize(filePath);
 
 	char* buf = (char*)calloc(fileSize + 2, 1);
 	if (!buf)
@@ -101,17 +101,17 @@ void Utils::SetConsoleColor(FILE* where, ConsoleColor color)
 	fprintf(where, "\033[0;%dm", (int)color);
 }
 
-size_t Utils::GetFileSize(const char* path)
+std::size_t Utils::GetFileSize(const char* path)
 {
     struct stat result = {};
     stat(path, &result);
 
-    return (size_t)result.st_size;
+    return (std::size_t)result.st_size;
 }
 
 #define mmix(h, k) do { k *= m; k ^= k >> r; k *= m; h *= m; h ^= k; } while (0)
 
-uint64_t Utils::CalculateHash(const void *data, size_t length, uint64_t seed)
+uint64_t Utils::CalculateHash(const void *data, std::size_t length, uint64_t seed)
 {
 	const uint64_t m = 0x5bd1e9955bd1e995;
 	const uint64_t r = 24;
@@ -159,19 +159,19 @@ uint64_t Utils::CalculateHash(const void *data, size_t length, uint64_t seed)
 	return h;
 }
 
-void Utils::WriteSpaces(FILE* where, size_t spacesCount)
+void Utils::WriteSpaces(FILE* where, std::size_t spacesCount)
 {
-	for (size_t i = 0; i < spacesCount; i++)
+	for (std::size_t i = 0; i < spacesCount; i++)
 		fputc(' ', where);
 }
 
 void Utils::Timer::Start()
 {
-	this->startTicks = GetCPUTicks();
+	startTicks = GetCPUTicks();
 }
 
 uint64_t Utils::Timer::Stop()
 {
-	this->endTicks   = GetCPUTicks();
+	endTicks   = GetCPUTicks();
 	return endTicks - startTicks;
 }

@@ -37,7 +37,7 @@ enum ErrorCode
     ERROR_TREE_LOOP, ERROR_SDL, ERROR_NOT_OWNER, EXIT,
 };
 
-static const size_t SIZET_POISON = (size_t)-1;
+static const std::size_t SIZET_POISON = (std::size_t)-1;
 
 #define GET_FILE_NAME()       __FILE__
 #define GET_LINE()            __LINE__
@@ -51,7 +51,7 @@ struct Error
 {
     ErrorCode   code; /**< error code*/
     const char* file; /**< file where error occured*/
-    size_t      line; /**< line where error occured*/
+    std::size_t line; /**< line where error occured*/
     const char* function; /**< function where error occured*/
 
     /**
@@ -62,7 +62,8 @@ struct Error
      * @param line 
      * @param function 
      */
-    Error(ErrorCode code, const char* file, size_t line, const char* function) noexcept;
+    Error(ErrorCode code, const char* file, std::size_t line,
+          const char* function) noexcept;
     Error() noexcept
         : code(ErrorCode::EVERYTHING_FINE), file(""), line(0), function("") {}
 
@@ -82,7 +83,7 @@ struct Error
     /**
      * @brief Get what the error means
      * 
-     * @return const char*
+     * @return const char* name
      */
     const char* GetErrorName()    const noexcept;
     /**
@@ -229,7 +230,7 @@ bool IsEqual(const double x1, const double x2);
  * @param [in] a, b - elements to swap.
  * @param [in] size - size of the elements.
 */
-void Swap(void* a, void* b, size_t size);
+void Swap(void* a, void* b, std::size_t size);
 
 /**
  * @brief Clears stdin.
@@ -270,17 +271,18 @@ void SetConsoleColor(FILE* where, ConsoleColor color);
  * @param [in] path to the file.
  * @return size.
  */
-size_t GetFileSize(const char* path);
+std::size_t GetFileSize(const char* path);
 
 /**
  * @brief Calculates hash
  *
  * @param [in] key - the object to hash
- * @param [in] len - length in bytes
- * @param [in] - salt
- * @return unsigned int hash
+ * @param [in] length - length in bytes
+ * @param [in] seed
+ * 
+ * @return uint64_t hash
  */
-uint64_t CalculateHash(const void* key, size_t length, uint64_t seed);
+uint64_t CalculateHash(const void* key, std::size_t length, uint64_t seed);
 
 /**
  * @brief Writes several spaces to a stream
@@ -288,7 +290,7 @@ uint64_t CalculateHash(const void* key, size_t length, uint64_t seed);
  * @param [in] where - where to emit spaces
  * @param [in] spacesCount - how much spaces to emit
  */
-void WriteSpaces(FILE* where, size_t spacesCount);
+void WriteSpaces(FILE* where, std::size_t spacesCount);
 
 /**
  * @brief Returns ticks passed since CPU start
