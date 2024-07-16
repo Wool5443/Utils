@@ -115,7 +115,7 @@ struct Result
     Result(const T& value, Error error)
         : value(value), error(error) {}
 
-    operator bool()  { return error; }
+    operator bool()  { return !error; }
     operator Error() { return error; }
 };
 
