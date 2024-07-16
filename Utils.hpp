@@ -1,6 +1,7 @@
-//! @file
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
-#pragma once
+//! @file
 
 #include <cstdio>
 #include <cstdlib>
@@ -322,3 +323,5 @@ struct Timer
     uint64_t Stop();
 };
 }
+
+#endif
