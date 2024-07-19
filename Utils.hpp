@@ -117,7 +117,8 @@ struct Result
         : value(value), error(error) {}
 
     operator bool()  { return !error; }
-    operator Error() { return error; }
+    operator Error() { return error;  }
+    operator T() = delete;
 };
 
 #ifdef NDEBUG
