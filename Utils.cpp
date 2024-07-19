@@ -7,40 +7,6 @@
 #include <sys/stat.h>
 #include "Utils.hpp"
 
-Utils::Error::Error(ErrorCode code, const char* file, std::size_t line, const char* function) noexcept
-	: code(code), file(file), line(line), function(function) {}
-
-static const char* ERROR_CODE_NAMES[] =
-{
-    "EVERYTHING_FINE", "ERROR_NULLPTR", "ERROR_BAD_NUMBER", "ERROR_BAD_FILE", "ERROR_OVERLAP",
-    "ERROR_INDEX_OUT_OF_BOUNDS", "ERROR_NO_MEMORY", "ERROR_NO_COMPARATOR", "ERROR_BAD_SIZE",
-    "ERROR_BAD_VALUE", "ERROR_DEAD_CANARY", "ERROR_BAD_HASH", "ERROR_ZERO_DIVISION",
-    "ERROR_SYNTAX", "ERROR_WRONG_LABEL_SIZE", "ERROR_TOO_MANY_LABELS",
-    "ERROR_NOT_FOUND", "ERROR_BAD_FIELDS", "ERROR_BAD_TREE", "ERROR_NO_ROOT",
-    "ERROR_TREE_LOOP", "ERROR_SDL", "ERROR_NOT_OWNER", "EXIT",
-};
-const char* Utils::Error::GetErrorName() const noexcept
-{
-	return ERROR_CODE_NAMES[(std::size_t)this->code];
-}
-
-void Utils::Error::Print() const noexcept
-{
-	if (*this) SetConsoleColor(stdout, ConsoleColor::RED);
-	else       SetConsoleColor(stdout, ConsoleColor::GREEN);
-	Print(stdout);
-	SetConsoleColor(stdout, ConsoleColor::WHITE);
-	fflush(stdout);
-}
-
-void Utils::Error::Print(FILE* file) const noexcept
-{
-	fprintf(file, "%s in %s:%zu in %s\n",
-			GetErrorName(), this->file, line,
-			function);
-	fflush(file);
-}
-
 const double ABSOLUTE_TOLERANCE = 1e-5;
 
 bool Utils::IsEqual(const double x1, const double x2)
