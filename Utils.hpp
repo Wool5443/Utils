@@ -32,7 +32,8 @@ enum class ConsoleColor
   * @param x1
   * @param x2
   *
-  * @return bool
+  * @return true equal
+  * @return false not equal
   */
 bool DoubleEqual(const double x1, const double x2);
 
