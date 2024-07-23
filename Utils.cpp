@@ -52,7 +52,7 @@ char* Utils::ReadFileToBuf(const char* filePath)
 	if (!buf)
 		return nullptr;
 
-	FILE* file = fopen(filePath, "r");
+	FILE* file = fopen(filePath, "rb");
 	if (!file)
 		return nullptr;
 
@@ -111,7 +111,7 @@ uint64_t Utils::CalculateHash(const void *data, std::size_t length, uint64_t see
 	case 1:
 		t ^= d[0];
 		break;
-	default: 
+	default:
 		break;
 	};
 
