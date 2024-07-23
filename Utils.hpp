@@ -3,10 +3,9 @@
 
 //! @file
 
-#include <cstdio>
-#include <cstdlib>
 #include <cstdint>
-#include <cmath>
+#include <ostream>
+#include <chrono>
 
 namespace Utils
 {
@@ -28,83 +27,49 @@ enum class ConsoleColor
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
 
  /**
-  * @brief Tells if 2 doubles are equal.
+  * @brief Tells if 2 doubles are equal
   *
   * @param x1
   * @param x2
   *
-  * @return true The numbers are equal.
-  * @return false The numbers are not equal.
+  * @return bool
   */
-bool IsEqual(const double x1, const double x2);
+bool DoubleEqual(const double x1, const double x2);
 
 /**
- * @brief swaps 2 elements a and b in memory.
+ * @brief Get the file size
  *
- * @param [in] a, b - elements to swap.
- * @param [in] size - size of the elements.
-*/
-void Swap(void* a, void* b, std::size_t size);
-
-/**
- * @brief Clears stdin.
+ * @param [in] path to the file
  *
- * @param [in] where - file stream which buffer to clean.
- */
-void ClearBuffer(FILE* where);
-
-/**
- * @brief Check if the user input contains anything but scanned data.
- *
- * @param [in] where - file stream where to input.
- *
- * @return true Everything is clear.
- * @return false User entered something odd.
- */
-bool CheckInput(FILE* where);
-
-/**
- * @brief Reads a file to a buffer and returns it.
- *
- * @param [in] filePath path to the file.
- * @return char* buffer.
- */
-char* ReadFileToBuf(const char* filePath);
-
-/**
- * @brief Set the color of either stderr or stdout
- *
- * @param [in] where - stderr or stdout
- * @param [in] color - @see Color
- */
-void SetConsoleColor(FILE* where, ConsoleColor color);
-
-/**
- * @brief Get the file size.
- *
- * @param [in] path to the file.
- * @return size.
+ * @return size
  */
 std::size_t GetFileSize(const char* path);
 
 /**
- * @brief Calculates hash
+ * @brief Reads a file to a buffer and returns it
  *
- * @param [in] key - the object to hash
- * @param [in] length - length in bytes
- * @param [in] seed
- * 
- * @return uint64_t hash
+ * @param [in] filePath path to the file
+ *
+ * @return char* buffer
  */
-uint64_t CalculateHash(const void* key, std::size_t length, uint64_t seed);
+char* ReadFileToBuf(const char* filePath);
 
 /**
  * @brief Writes several spaces to a stream
  *
- * @param [in] where - where to emit spaces
+ * @param [in] out - where to emit spaces
+ *
  * @param [in] spacesCount - how much spaces to emit
  */
-void WriteSpaces(FILE* where, std::size_t spacesCount);
+void WriteSpaces(std::ostream& out, std::size_t spacesCount);
+
+/**
+ * @brief Set the console color
+ *
+ * @param [in] out std::cout or std::cerr
+ * @param [in] color
+ */
+void SetConsoleColor(std::ostream& out, ConsoleColor color);
 
 /**
  * @brief Returns ticks passed since CPU start
@@ -118,15 +83,16 @@ static inline __attribute__((always_inline)) uint64_t GetCPUTicks()
     return (hi << 32) + lo;
 }
 
-struct Timer
+class TickTimer
 {
-    uint64_t startTicks;
-    uint64_t endTicks;
-
+    uint64_t m_startTicks = 0;
+    uint64_t m_endTicks   = 0;
+public:
     /**
      * @brief Starts the timer
      */
-    void     Start();
+    TickTimer()
+        : m_startTicks(GetCPUTicks()) {}
 
     /**
      * @brief Stops the timer and return how much ticks passed
@@ -135,6 +101,21 @@ struct Timer
      */
     uint64_t Stop();
 };
+
+class Timer
+{
+    using Clock = std::chrono::high_resolution_clock;
+
+    static Clock m_clock;
+
+    Clock::time_point m_start{};
+    Clock::time_point m_end{};
+public:
+    Timer();
+
+    Clock::duration Stop();
+};
+
 }
 
 #endif

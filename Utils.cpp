@@ -9,36 +9,17 @@
 
 const double ABSOLUTE_TOLERANCE = 1e-5;
 
-bool Utils::IsEqual(const double x1, const double x2)
+bool Utils::DoubleEqual(const double x1, const double x2)
 {
-	return fabs(x1 - x2) < ABSOLUTE_TOLERANCE;
+	return abs(x1 - x2) < ABSOLUTE_TOLERANCE;
 }
 
-void Utils::Swap(void* a, void* b, std::size_t size)
+std::size_t Utils::GetFileSize(const char* path)
 {
-    char* _a = (char*)a;
-    char* _b = (char*)b;
+    struct stat result = {};
+    stat(path, &result);
 
-    for (std::size_t curByte = 0; curByte < size; curByte++)
-    {
-        char _temp = _a[curByte];
-        _a[curByte] = _b[curByte];
-        _b[curByte] = _temp;
-    }
-}
-
-void Utils::ClearBuffer(FILE* where)
-{
-	int c = fgetc(where);
-	while (c != '\n' && c != EOF) { c = fgetc(where); }
-}
-
-bool Utils::CheckInput(FILE* where)
-{
-	int c = fgetc(where);
-	while (c == ' ' || c == '\t') { c = fgetc(where); }
-
-	return c == '\n';
+    return (std::size_t)result.st_size;
 }
 
 char* Utils::ReadFileToBuf(const char* filePath)
@@ -62,82 +43,23 @@ char* Utils::ReadFileToBuf(const char* filePath)
 	return buf;
 }
 
-void Utils::SetConsoleColor(FILE* where, ConsoleColor color)
+void Utils::SetConsoleColor(std::ostream& out, ConsoleColor color)
 {
-	fprintf(where, "\033[0;%dm", (int)color);
+	out << "\033[0;" << static_cast<int>(color) << "m";
 }
 
-std::size_t Utils::GetFileSize(const char* path)
+uint64_t Utils::TickTimer::Stop()
 {
-    struct stat result = {};
-    stat(path, &result);
-
-    return (std::size_t)result.st_size;
+	m_endTicks = GetCPUTicks();
+	return m_endTicks - m_startTicks;
 }
 
-#define mmix(h, k) do { k *= m; k ^= k >> r; k *= m; h *= m; h ^= k; } while (0)
+Utils::Timer::Timer()
+	: m_start(m_clock.now()) {}
 
-uint64_t Utils::CalculateHash(const void *data, std::size_t length, uint64_t seed)
+Utils::Timer::Clock::duration Utils::Timer::Stop()
 {
-	const uint64_t m = 0x5bd1e9955bd1e995;
-	const uint64_t r = 24;
-	uint64_t       l = length;
+	m_end = Clock::now();
 
-	const unsigned char* d = (const unsigned char*)data;
-
-	uint64_t h = seed;
-	uint64_t k;
-
-	while(length >= 4)
-	{
-		k = *(unsigned int*)d;
-
-		mmix(h,k);
-
-		d += 4;
-		length -= 4;
-	}
-
-	uint64_t t = 0;
-
-	switch(length)
-	{
-	case 3:
-		t ^= (d[2] << 16);
-		break;
-	case 2:
-		t ^= (d[1] << 8);
-		break;
-	case 1:
-		t ^= d[0];
-		break;
-	default:
-		break;
-	};
-
-	mmix(h,t);
-	mmix(h,l);
-
-	h ^= h >> 13;
-	h *= m;
-	h ^= h >> 15;
-
-	return h;
-}
-
-void Utils::WriteSpaces(FILE* where, std::size_t spacesCount)
-{
-	for (std::size_t i = 0; i < spacesCount; i++)
-		fputc(' ', where);
-}
-
-void Utils::Timer::Start()
-{
-	startTicks = GetCPUTicks();
-}
-
-uint64_t Utils::Timer::Stop()
-{
-	endTicks   = GetCPUTicks();
-	return endTicks - startTicks;
+	return m_end - m_start;
 }
