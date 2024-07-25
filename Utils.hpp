@@ -110,18 +110,19 @@ public:
     uint64_t Stop();
 };
 
-class Timer
+struct Timer
 {
-    using Clock = std::chrono::high_resolution_clock;
-
-    static Clock m_clock;
-
-    Clock::time_point m_start{};
-    Clock::time_point m_end{};
+    using Clock     = std::chrono::high_resolution_clock;
+    using Duration  = Clock::duration;
+    using TimePoint = Clock::time_point;
 public:
     Timer();
 
-    Clock::duration Stop();
+    Duration Stop();
+private:
+    static Clock m_clock;
+    TimePoint    m_start{};
+    TimePoint    m_end{};
 };
 
 }
