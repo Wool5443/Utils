@@ -7,8 +7,8 @@
 #include <ostream>
 #include <chrono>
 
-namespace Utils
-{
+namespace Utils {
+
 /** @enum ConsoleColor
  * @brief Represents colors for @see SetConsoleColor
  */
@@ -22,6 +22,13 @@ enum class ConsoleColor
     MAGENTA,
     CYAN,
     WHITE,
+};
+
+template<typename T1, typename T2>
+struct Pair
+{
+    T1 val1;
+    T2 val2;
 };
 
 #define ArrayLength(array) sizeof(array) / sizeof(*(array))
